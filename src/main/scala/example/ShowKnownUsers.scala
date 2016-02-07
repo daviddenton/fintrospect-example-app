@@ -12,6 +12,6 @@ class ShowKnownUsers(userDirectory: UserDirectory) extends ServerRoutes[View] {
     request => userDirectory.list().flatMap(u => KnownUsers(u))
   }
 
-  add(RouteSpec("See current inhabitants of building").at(Get) / "known" bindTo show)
+  add(RouteSpec("See all known users").at(Get) / "known" bindTo show)
 
 }

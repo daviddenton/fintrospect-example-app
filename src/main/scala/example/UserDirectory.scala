@@ -10,6 +10,8 @@ import io.fintrospect.RouteSpec
 import io.fintrospect.formats.json.Json4s.Native.JsonFormat._
 import io.fintrospect.parameters._
 
+import scala.language.reflectiveCalls
+
 /**
   * Remote User Directory service, accessible over HTTP. We define the Routes making up the HTTP contract here so they can be
   * re-used to provide the Fake implementation which we can dev against.

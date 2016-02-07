@@ -21,7 +21,7 @@ class ByeBye(inhabitants: Inhabitants, entryLogger: EntryLogger) extends ServerR
       if (inhabitants.remove(exiting))
         entryLogger
           .exit(exiting)
-          .map(ue => Accepted())
+          .map(_ => Accepted())
       else BadRequest()
     }
   }
@@ -30,7 +30,6 @@ class ByeBye(inhabitants: Inhabitants, entryLogger: EntryLogger) extends ServerR
     .taking(apiKey) // see SecuritySystemAuth for why this is here
     .taking(username)
     .returning(Ok -> "Exit granted")
-    .returning(NotFound -> "User was not in building")
     .returning(BadRequest -> "User is not inside building")
     .returning(Unauthorized -> "Incorrect key")
     .at(Post) / "bye" bindTo userExit)

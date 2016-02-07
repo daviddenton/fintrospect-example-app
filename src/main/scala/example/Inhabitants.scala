@@ -1,20 +1,22 @@
 package example
 
-class Inhabitants {
-  private var users: Seq[Username] = Nil
+class Inhabitants extends Iterable[Username] {
+  private var currentUsers: Seq[Username] = Nil
 
   def add(user: Username): Boolean = {
-    if (users.contains(user)) false
+    if (currentUsers.contains(user)) false
     else {
-      users = users :+ user
+      currentUsers = currentUsers :+ user
       true
     }
   }
 
   def remove(user: Username): Boolean = {
-    if (users.contains(user)) {
-      users = users.filterNot(_ == user)
+    if (currentUsers.contains(user)) {
+      currentUsers = currentUsers.filterNot(_ == user)
       true
     } else false
   }
+
+  override def iterator: Iterator[Username] = currentUsers.iterator
 }

@@ -30,6 +30,7 @@ class SecuritySystem(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: I
     .withDescriptionPath(_ / "api-docs")
     .securedBy(SecuritySystemAuth())
     .withRoutes(new KnockKnock(inhabitants, userDirectory, entryLogger))
+    .withRoutes(new WhoIsThere(inhabitants, userDirectory))
     .withRoutes(new ByeBye(inhabitants, entryLogger))
 
   private val internalModule = ModuleSpec(Root / "internal", SimpleJson()).withRoute(new Ping().route)
