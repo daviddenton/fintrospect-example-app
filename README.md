@@ -12,6 +12,11 @@ This is a complete example application which uses the majority of the features o
 - Templating system (Mustache)
 - Serving of static resources
 
+It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
+to give a complete overview of how the app would look when finished. The code itself has been left without optimisation of
+imports in order to aid comprehension - which is a little frustrating from a maintainer perspective (as you always want your 
+code looking as awesome as possible! :).
+
 #### running this demo app
 1. Clone this repo
 2. Run ```sbt test:run```, or  ```RunnableEnvironment``` from an IDE. This will start the application on port 9999 
@@ -19,13 +24,9 @@ which has been configured to use a fake versions of the remote dependencies (on 
 3. Just point your browser at <a href="http://localhost:9999/">http://localhost:9999/</a>
 
 <hr/>
+<hr/>
 
 # building security system
-
-It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
-to give a complete overview of how the app would look when finished. The code itself has been left without optimisation of
-imports in order to aid comprehension - which is a little frustrating from a maintainer perspective (as you always want your 
-code looking as awesome as possible! :).
 
 #### requirements
 This example models a simple building security system accessible over HTTP. Requirements are:
