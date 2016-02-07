@@ -1,7 +1,7 @@
 # building security system
 
 #### about
-This is a complete example application which uses the majority of the features of [http://fintrospect.io](Fintrospect):
+This is a complete example application which uses the majority of the features of [Fintrospect](http://fintrospect.io):
 - HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including custom JSON library support (Json4S)
