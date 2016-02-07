@@ -1,7 +1,7 @@
 # building security system
 
 #### about
-This is a complete example application which uses the majority of the features of Fintrospect:
+This is a complete example application which uses the majority of the features of [http://fintrospect.io](Fintrospect):
 - HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including custom JSON library support (Json4S)
@@ -32,5 +32,5 @@ This example models a simple building security system accessible over HTTP. Requ
 1. Clone this repo
 2. Run ```sbt test:run```, or  ```RunnableEnvironment``` from an IDE. This will start the application on port 9999 
 which has been configured to use a fake versions of the remote dependencies (on ports 10000 and 10001)
-3. Just point your browser at <a target="_top" href="http://localhost:9999/">http://localhost:9999/</a>
+3. Just point your browser at <a href="http://localhost:9999/">http://localhost:9999/</a>
 
