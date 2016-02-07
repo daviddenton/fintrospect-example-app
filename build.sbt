@@ -2,6 +2,8 @@ name := "fintrospect-example-app"
 
 scalaVersion := "2.11.7"
 
+mainClass in (Test, run) := Some("env.RunnableEnvironment")
+
 libraryDependencies ++= Seq(
   "io.github.daviddenton" %% "fintrospect" % "12.2.0",
   "com.twitter" %% "finagle-http" % "6.33.0",
