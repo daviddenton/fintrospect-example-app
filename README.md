@@ -18,6 +18,8 @@ This is a complete example application which uses the majority of the features o
 which has been configured to use a fake versions of the remote dependencies (on ports 10000 and 10001)
 3. Just point your browser at <a href="http://localhost:9999/">http://localhost:9999/</a>
 
+<hr/>
+
 # building security system
 
 It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
