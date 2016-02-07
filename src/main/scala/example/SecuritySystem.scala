@@ -24,7 +24,7 @@ class SecuritySystem(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: I
   private val inhabitants = new Inhabitants
 
   private val serviceModule = ModuleSpec(Root / "security",
-    Swagger2dot0Json(ApiInfo("Security System", "1.0", Option("Building security system"))),
+    Swagger2dot0Json(ApiInfo("Security System API", "1.0", Option("Known users are `Bob`, `Sue`, `Rita`. Security key is `realSecret`"))),
     new RequestCountingFilter(System.out)
   )
     .withDescriptionPath(_ / "api-docs")
