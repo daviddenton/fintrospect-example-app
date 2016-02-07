@@ -1,13 +1,15 @@
 # building security system
 
 #### about
-This is a complete example application which uses all the features of Fintrospect:
+This is a complete example application which uses the majority of the features of Fintrospect:
 - HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
-- HTTP clients with request creation and route spec reuse for
-- HTTP response building
-- Json4S message formats
-- Invalid request handling
-- Swagger 2.0 documentation creation
+- HTTP clients with request creation and route spec reuse for Fake Server implementations
+- HTTP response building, including custom JSON library support (Json4S)
+- Automatic invalid request handling
+- Swagger 2.0 documentation and JSON schema generation from example model objects
+- Endpoint security
+- Templating system (Mustache)
+- Serving of static resources
 
 It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
 to give a complete overview of how the app would look when finished. The code itself has been left without optimisation of
@@ -20,10 +22,11 @@ This example models a simple building security system accessible over HTTP. Requ
 1. Users can ask to be let into and out of the building.
 2. Usernames are checked for validity against a remote HTTP UserDirectory system.
 3. Successful entries and exits are logged in a remote HTTP EntryLogger system.
-4. Users are tracking in a binary state - inside or not (outside). Only people outside the building can enter, and vice versa.
-5. All HTTP endpoints are protected with a secret HTTP header to only allow authorised access.
-6. API documentation should be available.
-7. Logging of every 10 successful requests should be made.
+4. Ability to check on the current inhabitants of a building.
+5. Users are tracking in a binary state - inside or not (outside). Only people outside the building can enter, and vice versa.
+6. All HTTP endpoints are protected with a secret HTTP header to only allow authorised access.
+7. API documentation should be available.
+8. Logging of every 10 successful requests should be made.
 
 #### running this demo app
 1. Clone this repo
