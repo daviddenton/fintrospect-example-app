@@ -6,10 +6,6 @@ import com.twitter.finagle.{Service, SimpleFilter}
 import com.twitter.util.Future
 import io.fintrospect.{ModuleSpec, ServerRoutes}
 
-/**
-  * In-memory http
-  * @param serverRoutes
-  */
 class InMemoryHttp(serverRoutes: ServerRoutes[Response]) {
 
   private var overrideStatus = Option.empty[Status]
