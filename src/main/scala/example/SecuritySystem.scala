@@ -7,7 +7,7 @@ import com.twitter.finagle._
 import com.twitter.finagle.http.filter.Cors
 import com.twitter.finagle.http.filter.Cors.HttpFilter
 import com.twitter.finagle.http.path.Root
-import com.twitter.util.Future
+import com.twitter.finagle.http.{Request, Response}
 import io.fintrospect.formats.Html
 import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
@@ -15,12 +15,11 @@ import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
 import io.fintrospect.templating.{RenderMustacheView, View}
 import io.fintrospect.{Module, ModuleSpec, StaticModule}
 
-class SecuritySystem(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: Int, clock: Clock) {
+class SecuritySystem(userDirectorySvc: Service[Request, Response], entryLoggerSvc: Service[Request, Response], clock: Clock) {
 
-  private var server: ListeningServer = null
+  private val userDirectory = new UserDirectory(userDirectorySvc)
+  private val entryLogger = new EntryLogger(entryLoggerSvc, clock)
 
-  private val userDirectory = new UserDirectory(s"localhost:$userDirectoryPort")
-  private val entryLogger = new EntryLogger(s"localhost:$entryLoggerPort", clock)
   private val inhabitants = new Inhabitants
 
   private val serviceModule = ModuleSpec(Root / "security",
@@ -49,12 +48,7 @@ class SecuritySystem(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: I
   // to all routes in the system
   private val globalFilter = new HttpFilter(Cors.UnsafePermissivePolicy).andThen(CatchAll)
 
-  def start() = {
-    server = Http.serve(s":$serverPort", globalFilter.andThen(Module.toService(
-      Module.combine(serviceModule, internalModule, publicModule, webModule))))
-    Future.Done
-  }
-
-  def stop() = server.close()
-
+  val service = globalFilter.andThen(
+    Module.toService(Module.combine(serviceModule, internalModule, publicModule, webModule))
+  )
 }

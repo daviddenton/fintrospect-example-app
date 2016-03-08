@@ -1,5 +1,6 @@
 package contract
 
+import com.twitter.finagle.Http
 import example.{EmailAddress, Username}
 import org.scalatest.Ignore
 
@@ -13,5 +14,5 @@ class RealUserDirectoryContractTest extends UserDirectoryContract {
   // real test data would be set up here for the required environment
   override lazy val username = Username("Elon Musk")
   override lazy val email = EmailAddress("elon@tesla.com")
-  override lazy val authority = "google.com:80"
+  override lazy val service = Http.newService("google.com:80")
 }

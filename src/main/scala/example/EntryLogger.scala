@@ -2,9 +2,9 @@ package example
 
 import java.time.Clock
 
-import com.twitter.finagle.Http
+import com.twitter.finagle.{Service, Http}
 import com.twitter.finagle.http.Method.{Get, Post}
-import com.twitter.finagle.http.{Response, Status}
+import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import example.EntryLogger.{Entry, Exit, LogList}
 import io.fintrospect.RouteSpec
@@ -27,14 +27,12 @@ object EntryLogger {
     val entries = Body(bodySpec[Seq[UserEntry]]())
     val route = RouteSpec().at(Get) / "list"
   }
-
 }
 
 /**
   * Remote Entry Logger service, accessible over HTTP
   */
-class EntryLogger(hostAuthority: String, clock: Clock) {
-  private val http = Http.newService(hostAuthority)
+class EntryLogger(http: Service[Request, Response], clock: Clock) {
 
   private def expect[T](expectedStatus: Status, b: Body[T]): Response => Future[T] = {
     r => if (r.status == expectedStatus) Future.value(b <-- r)

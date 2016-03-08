@@ -1,9 +1,9 @@
 package example
 
-import com.twitter.finagle.Http
+import com.twitter.finagle.{Service, Http}
 import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status._
-import com.twitter.finagle.http.{Response, Status}
+import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import example.UserDirectory._
 import io.fintrospect.RouteSpec
@@ -48,13 +48,11 @@ object UserDirectory {
 /**
   * Remote User Directory service, accessible over HTTP
   */
-class UserDirectory(hostAuthority: String) {
+class UserDirectory(http: Service[Request, Response]) {
 
   private def expect[T](expectedStatus: Status, b: Body[T]): Response => Future[T] =
     r => if (r.status == expectedStatus) Future.value(b.from(r))
     else Future.exception(RemoteSystemProblem("user directory", r.status))
-
-  private val http = Http.newService(hostAuthority)
 
   private val createClient = Create.route bindToClient http
 
