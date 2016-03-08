@@ -1,9 +1,11 @@
 package contract
 
+import com.twitter.finagle.http.Response
 import com.twitter.finagle.http.Status._
 import com.twitter.util.Await
-import env.{FakeEntryLogger, InMemoryHttp}
+import env.FakeEntryLogger
 import example._
+import io.fintrospect.testing.OverridableHttpService
 import org.scalatest.BeforeAndAfterEach
 
 /**
@@ -11,7 +13,7 @@ import org.scalatest.BeforeAndAfterEach
   */
 class FakeEntryLoggerContractTest extends EntryLoggerContract with BeforeAndAfterEach {
   lazy val state = new FakeEntryLogger()
-  lazy val entryLoggerHttp = new InMemoryHttp(state)
+  lazy val entryLoggerHttp = new OverridableHttpService[Response](state)
   override lazy val service = entryLoggerHttp.service
 
   override protected def beforeEach(): Unit = state.reset()

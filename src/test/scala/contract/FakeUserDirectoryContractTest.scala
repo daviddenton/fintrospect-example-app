@@ -1,9 +1,11 @@
 package contract
 
+import com.twitter.finagle.http.Response
 import com.twitter.finagle.http.Status._
 import com.twitter.util.Await
-import env.{FakeUserDirectory, InMemoryHttp}
+import env.FakeUserDirectory
 import example._
+import io.fintrospect.testing.OverridableHttpService
 import org.scalatest.BeforeAndAfterEach
 
 /**
@@ -14,7 +16,7 @@ class FakeUserDirectoryContractTest extends UserDirectoryContract with BeforeAnd
   override lazy val email = EmailAddress("bob@fintrospect.io")
 
   lazy val state = new FakeUserDirectory()
-  lazy val userServiceHttp = new InMemoryHttp(state)
+  lazy val userServiceHttp = new OverridableHttpService[Response](state)
   override lazy val service = userServiceHttp.service
 
   override protected def beforeEach(): Unit = state.reset()

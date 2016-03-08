@@ -2,9 +2,10 @@ package env
 
 import java.time.{Clock, Instant, ZoneId}
 
-import com.twitter.finagle.http.Request
+import com.twitter.finagle.http.{Response, Request}
 import com.twitter.util.Await
 import example.SecuritySystem
+import io.fintrospect.testing.OverridableHttpService
 
 class TestEnvironment() {
 
@@ -13,8 +14,8 @@ class TestEnvironment() {
   val userDirectory = new FakeUserDirectory()
   val entryLogger = new FakeEntryLogger()
 
-  val userDirectoryHttp = new InMemoryHttp(userDirectory)
-  val entryLoggerHttp = new InMemoryHttp(entryLogger)
+  val userDirectoryHttp = new OverridableHttpService[Response](userDirectory)
+  val entryLoggerHttp = new OverridableHttpService[Response](entryLogger)
 
   private val securitySystemSvc = new SecuritySystem(
     userDirectoryHttp.service,
