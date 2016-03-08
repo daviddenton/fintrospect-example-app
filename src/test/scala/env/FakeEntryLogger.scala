@@ -18,27 +18,22 @@ class FakeEntryLogger extends ServerRoutes[Response] {
 
   def reset() = entries = Seq[UserEntry]()
 
-  private def entry() = Service.mk[Request, Response] {
-    request =>
-      val userEntry = Entry.entry <-- request
-      entries = entries :+ userEntry
-      Created(encode(userEntry))
-  }
+  add(Entry.route.bindTo(Service.mk[Request, Response] { request =>
+    val userEntry = Entry.entry <-- request
+    entries = entries :+ userEntry
+    Created(encode(userEntry))
+  })
+  )
 
-  add(Entry.route.bindTo(entry))
-
-  private def exit() = Service.mk[Request, Response] {
-    request =>
+  add(
+    Exit.route.bindTo(Service.mk[Request, Response] { request =>
       val userEntry = Exit.entry <-- request
       entries = entries :+ userEntry
       Created(encode(userEntry))
-  }
+    })
+  )
 
-  add(Exit.route.bindTo(entry))
-
-  private def entryList() = Service.mk[Request, Response] { _ => { Ok(encode(entries))}}
-
-  add(LogList.route.bindTo(entryList))
+  add(LogList.route.bindTo(Service.mk[Request, Response] { _ => Ok(encode(entries)) }))
 
   reset()
 }

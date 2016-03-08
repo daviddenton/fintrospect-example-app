@@ -15,11 +15,14 @@ import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
 import io.fintrospect.templating.{RenderMustacheView, View}
 import io.fintrospect.{Module, ModuleSpec, StaticModule}
 
-class SecuritySystem(userDirectorySvc: Service[Request, Response], entryLoggerSvc: Service[Request, Response], clock: Clock) {
+/**
+  * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
+  * inject non-HTTP versions of the downstream dependencies so we can run tests without starting up real HTTP servers.
+  */
+class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLoggerClient: Service[Request, Response], clock: Clock) {
 
-  private val userDirectory = new UserDirectory(userDirectorySvc)
-  private val entryLogger = new EntryLogger(entryLoggerSvc, clock)
-
+  private val userDirectory = new UserDirectory(userDirectoryClient)
+  private val entryLogger = new EntryLogger(entryLoggerClient, clock)
   private val inhabitants = new Inhabitants
 
   private val serviceModule = ModuleSpec(Root / "security",

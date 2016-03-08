@@ -29,7 +29,7 @@ object UserDirectory {
   object Delete {
     val id = Path(ParameterSpec[Id]("id", None, NumberParamType, s => Id(Integer.parseInt(s)), _.value.toString))
     val username = FormField.required.string("username")
-    val route = RouteSpec().at(Post) / "user" / "id" / id
+    val route = RouteSpec().at(Post) / "user" / id
   }
 
   object UserList {
@@ -48,13 +48,13 @@ object UserDirectory {
 /**
   * Remote User Directory service, accessible over HTTP
   */
-class UserDirectory(http: Service[Request, Response]) {
+class UserDirectory(client: Service[Request, Response]) {
 
   private def expect[T](expectedStatus: Status, b: Body[T]): Response => Future[T] =
     r => if (r.status == expectedStatus) Future.value(b.from(r))
     else Future.exception(RemoteSystemProblem("user directory", r.status))
 
-  private val createClient = Create.route bindToClient http
+  private val createClient = Create.route bindToClient client
 
   def create(name: Username, inEmail: EmailAddress): Future[User] = {
     val form = Form(Create.username --> name.value, Create.email --> inEmail.value)
@@ -62,7 +62,7 @@ class UserDirectory(http: Service[Request, Response]) {
       .flatMap(expect(Created, Create.user))
   }
 
-  private val deleteClient = Delete.route bindToClient http
+  private val deleteClient = Delete.route bindToClient client
 
   def delete(user: User): Future[Unit] =
     deleteClient(Delete.id --> user.id)
@@ -70,12 +70,12 @@ class UserDirectory(http: Service[Request, Response]) {
         r => if (r.status == Ok) Future.value(Unit)
         else Future.exception(RemoteSystemProblem("user directory", r.status)))
 
-  private val listClient = UserList.route bindToClient http
+  private val listClient = UserList.route bindToClient client
 
   def list(): Future[Seq[User]] = listClient()
     .flatMap(expect(Ok, UserList.users))
 
-  private val lookupClient = Lookup.route bindToClient http
+  private val lookupClient = Lookup.route bindToClient client
 
   def lookup(username: Username): Future[Option[User]] =
     lookupClient(Lookup.username --> username)

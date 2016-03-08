@@ -32,26 +32,26 @@ object EntryLogger {
 /**
   * Remote Entry Logger service, accessible over HTTP
   */
-class EntryLogger(http: Service[Request, Response], clock: Clock) {
+class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
   private def expect[T](expectedStatus: Status, b: Body[T]): Response => Future[T] = {
     r => if (r.status == expectedStatus) Future.value(b <-- r)
     else Future.exception(RemoteSystemProblem("entry logger", r.status))
   }
 
-  private val entryClient = Entry.route bindToClient http
+  private val entryClient = Entry.route bindToClient client
 
   def enter(username: Username): Future[UserEntry] =
     entryClient(Entry.entry --> UserEntry(username.value, goingIn = true, clock.instant().toEpochMilli))
       .flatMap(expect(Status.Created, Entry.entry))
 
-  private val exitClient = Exit.route bindToClient http
+  private val exitClient = Exit.route bindToClient client
 
   def exit(username: Username): Future[UserEntry] =
     exitClient(Exit.entry --> UserEntry(username.value, goingIn = false, clock.instant().toEpochMilli))
       .flatMap(expect(Status.Created, Exit.entry))
 
-  private val listClient = LogList.route bindToClient http
+  private val listClient = LogList.route bindToClient client
 
   def list(): Future[Seq[UserEntry]] = listClient().flatMap(expect(Status.Ok, LogList.entries))
 }

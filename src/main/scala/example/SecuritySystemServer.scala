@@ -4,6 +4,9 @@ import java.time.Clock
 import com.twitter.finagle.{ListeningServer, _}
 import com.twitter.util.Future
 
+/**
+  * Responsible for setting up real HTTP servers and clients to downstream services via HTTP
+  */
 class SecuritySystemServer(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: Int) {
 
   private var server: ListeningServer = null

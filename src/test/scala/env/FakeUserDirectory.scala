@@ -22,7 +22,7 @@ class FakeUserDirectory extends ServerRoutes[Response] {
 
   def reset() = users = mutable.Map[Id, User]()
 
-  private def create() = Service.mk[Request, Response] {
+  add(UserDirectory.Create.route.bindTo(Service.mk[Request, Response] {
     request => {
       val form = UserDirectory.Create.form <-- request
       val (username, email) = form <--(Create.username, Create.email)
@@ -30,9 +30,7 @@ class FakeUserDirectory extends ServerRoutes[Response] {
       users(newUser.id) = newUser
       Created(encode(newUser))
     }
-  }
-
-  add(UserDirectory.Create.route.bindTo(create))
+  }))
 
   private def delete(id: Id) = Service.mk[Request, Response] {
     request => users
@@ -44,7 +42,7 @@ class FakeUserDirectory extends ServerRoutes[Response] {
   add(UserDirectory.Delete.route.bindTo(delete))
 
   private def lookup(username: Username) = Service.mk[Request, Response] {
-    request =>
+    request: Request =>
       users
         .values
         .find(_.name == username)
@@ -54,9 +52,7 @@ class FakeUserDirectory extends ServerRoutes[Response] {
 
   add(UserDirectory.Lookup.route.bindTo(lookup))
 
-  private def userList() = Service.mk[Request, Response] { _ =>  Ok(encode(users.values)) }
-
-  add(UserDirectory.UserList.route.bindTo(userList))
+  add(UserDirectory.UserList.route.bindTo(Service.mk[Request, Response] { _ => Ok(encode(users.values)) }))
 
   reset()
 }
