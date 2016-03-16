@@ -15,7 +15,7 @@ class ByeBye(inhabitants: Inhabitants, entryLogger: EntryLogger) extends ServerR
 
   private val username = Query.required(ParameterSpec[Username]("username", None, StringParamType, s => Username(s), _.value.toString))
 
-  private def userExit() = Service.mk[Request, Response] {
+  private val userExit = Service.mk[Request, Response] {
     request => {
       val exiting = username <-- request
       if (inhabitants.remove(exiting))

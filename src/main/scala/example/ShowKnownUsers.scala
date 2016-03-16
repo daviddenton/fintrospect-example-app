@@ -8,7 +8,7 @@ import io.fintrospect.{RouteSpec, ServerRoutes}
 
 class ShowKnownUsers(userDirectory: UserDirectory) extends ServerRoutes[Request, View] {
 
-  private def show() = Service.mk[Request, View] {
+  private val show = Service.mk[Request, View] {
     request => userDirectory.list().flatMap(u => KnownUsers(u))
   }
 

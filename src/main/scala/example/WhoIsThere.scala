@@ -14,7 +14,7 @@ import scala.language.reflectiveCalls
 
 class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) extends ServerRoutes[Request, Response] {
 
-  private def listUsers() = Service.mk[Request, Response] {
+  private val listUsers = Service.mk[Request, Response] {
     request =>
       Future.collect(inhabitants.map(userDirectory.lookup).toSeq)
         .map(_.flatten[User])
