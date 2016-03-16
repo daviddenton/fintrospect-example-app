@@ -37,7 +37,7 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
 
   private val internalModule = ModuleSpec(Root / "internal", SimpleJson()).withRoute(new Ping().route)
 
-  private val webModule = ModuleSpec[View](Root,
+  private val webModule = ModuleSpec(Root,
     new SiteMapModuleRenderer(new URL("http://my.security.system")),
     new RenderMustacheView(Html.ResponseBuilder, "templates")
   )
