@@ -12,7 +12,7 @@ import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder._
 /**
   * Fake implementation of the Entry Logger HTTP contract. Note the re-use of the RouteSpecs from EntryLogger.
   */
-class FakeEntryLogger extends ServerRoutes[Response] {
+class FakeEntryLogger extends ServerRoutes[Request, Response] {
 
   var entries: Seq[UserEntry] = null
 

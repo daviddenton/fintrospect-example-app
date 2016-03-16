@@ -12,7 +12,7 @@ import io.fintrospect.{RouteSpec, ServerRoutes}
 
 import scala.language.reflectiveCalls
 
-class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) extends ServerRoutes[Response] {
+class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) extends ServerRoutes[Request, Response] {
 
   private def listUsers() = Service.mk[Request, Response] {
     request =>

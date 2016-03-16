@@ -14,7 +14,7 @@ import scala.collection.mutable
 /**
   * Fake implementation of the User Directory HTTP contract. Note the re-use of the RouteSpecs from UserDirectory.
   */
-class FakeUserDirectory extends ServerRoutes[Response] {
+class FakeUserDirectory extends ServerRoutes[Request, Response] {
 
   private var users: mutable.Map[Id, User] = null
 

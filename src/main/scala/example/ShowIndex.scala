@@ -10,7 +10,7 @@ import io.fintrospect.{RouteSpec, ServerRoutes}
 
 case class Index(time: String, browser: String) extends View
 
-class ShowIndex(userDirectory: UserDirectory) extends ServerRoutes[View] {
+class ShowIndex(userDirectory: UserDirectory) extends ServerRoutes[Request, View] {
 
   private def index() = Service.mk[Request, View] {
     request => Index(LocalDateTime.now().toString, request.headerMap.getOrElse("User-Agent", "unknown"))
