@@ -9,7 +9,7 @@ import io.fintrospect.formats.ResponseBuilder._
 import io.fintrospect.formats.json.Argo.ResponseBuilder._
 
 class Ping {
-  private def pong() = Service.mk[Request, Response] { _ => Ok("pong") }
+  private val pong = Service.mk[Request, Response] { _ => Ok("pong") }
 
   val route = RouteSpec("Uptime monitor").at(Get) / "ping" bindTo pong
 }
