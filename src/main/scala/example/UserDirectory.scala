@@ -1,6 +1,8 @@
 package example
 
-import com.twitter.finagle.{Service, Http}
+import java.lang.Integer._
+
+import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status._
 import com.twitter.finagle.http.{Request, Response, Status}
@@ -26,7 +28,7 @@ object UserDirectory {
   }
 
   object Delete {
-    val id = Path(ParameterSpec[Id]("id", None, NumberParamType, s => Id(Integer.parseInt(s)), _.value.toString))
+    val id = Path(ParameterSpec[Id]("id", None, NumberParamType, s => Id(parseInt(s)), _.value.toString))
     val username = FormField.required.string("username")
     val route = RouteSpec().at(Post) / "user" / id
   }
