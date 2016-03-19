@@ -19,7 +19,6 @@ import scala.language.reflectiveCalls
 object UserDirectory {
 
   object Create {
-    val user = Body(bodySpec[User](None))
     val email = FormField.required.string("email")
     val username = FormField.required.string("username")
     val form = Body.form(email, username)
@@ -33,12 +32,10 @@ object UserDirectory {
   }
 
   object UserList {
-    val users = Body(bodySpec[Seq[User]](None))
     val route = RouteSpec().at(Get) / "user"
   }
 
   object Lookup {
-    val user = Body(bodySpec[User](None))
     val username = Path(ParameterSpec[Username]("username", None, StringParamType, s => Username(s), _.value.toString))
     val route = RouteSpec().at(Get) / "user" / username
   }
@@ -50,8 +47,8 @@ object UserDirectory {
   */
 class UserDirectory(client: Service[Request, Response]) {
 
-  private def expect[T](expectedStatus: Status, b: Body[T]): Response => Future[T] =
-    r => if (r.status == expectedStatus) Future.value(b.from(r))
+  private def expectStatusAndExtract[T](expectedStatus: Status, responseBody: Body[T]): Response => Future[T] =
+    r => if (r.status == expectedStatus) Future.value(responseBody <-- r)
     else Future.exception(RemoteSystemProblem("user directory", r.status))
 
   private val createClient = Create.route bindToClient client
@@ -59,7 +56,7 @@ class UserDirectory(client: Service[Request, Response]) {
   def create(name: Username, inEmail: EmailAddress): Future[User] = {
     val form = Form(Create.username --> name.value, Create.email --> inEmail.value)
     createClient(Create.form --> form)
-      .flatMap(expect(Created, Create.user))
+      .flatMap(expectStatusAndExtract(Created, Body(bodySpec[User]())))
   }
 
   private val deleteClient = Delete.route bindToClient client
@@ -73,7 +70,7 @@ class UserDirectory(client: Service[Request, Response]) {
   private val listClient = UserList.route bindToClient client
 
   def list(): Future[Seq[User]] = listClient()
-    .flatMap(expect(Ok, UserList.users))
+    .flatMap(expectStatusAndExtract(Ok, Body(bodySpec[Seq[User]]())))
 
   private val lookupClient = Lookup.route bindToClient client
 
@@ -81,7 +78,7 @@ class UserDirectory(client: Service[Request, Response]) {
     lookupClient(Lookup.username --> username)
       .flatMap {
         r => r.status match {
-          case Ok => Future.value(Some(Lookup.user <-- r))
+          case Ok => Future.value(Some(Body(bodySpec[User]()) <-- r))
           case NotFound => Future.value(None)
           case s => Future.exception(RemoteSystemProblem("user directory", r.status))
         }
