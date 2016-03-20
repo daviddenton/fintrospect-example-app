@@ -6,8 +6,7 @@ import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.Status.{Accepted, BadRequest, NotFound, Ok, Unauthorized}
 import com.twitter.finagle.http.{Request, Response}
 import example.SecuritySystemAuth.apiKey
-import io.fintrospect.formats.ResponseBuilder.toFuture
-import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.{toResponse, toResponseBuilder}
+import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.implicits._
 import io.fintrospect.parameters.{ParameterSpec, Query, StringParamType}
 import io.fintrospect.{RouteSpec, ServerRoutes}
 

@@ -3,12 +3,11 @@ package env
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Status.{Created, Ok}
 import com.twitter.finagle.http.{Request, Response}
-import example.EntryLogger.{LogList, Exit, Entry}
+import example.EntryLogger.{Entry, Exit, LogList}
 import example.UserEntry
 import io.fintrospect.ServerRoutes
-import io.fintrospect.formats.ResponseBuilder.toFuture
 import io.fintrospect.formats.json.Json4s.Native.JsonFormat.encode
-import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.toResponseBuilder
+import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.implicits._
 
 /**
   * Fake implementation of the Entry Logger HTTP contract. Note the re-use of the RouteSpecs from EntryLogger.
