@@ -1,15 +1,15 @@
 package feature
 
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Status.Ok
 import env.RunningTestEnvironment
 import io.fintrospect.ContentTypes
 import io.fintrospect.formats.json.Json4s.Native.JsonFormat
 import org.json4s.JString
 import org.scalatest.{FunSpec, ShouldMatchers}
 
-import scala.xml.Utility._
-import scala.xml.XML
+import scala.xml.Utility.trim
+import scala.xml.{Utility, XML}
 
 class NonFunctionalRequirementsTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {
 

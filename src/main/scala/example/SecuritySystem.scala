@@ -3,7 +3,7 @@ package example
 import java.net.URL
 import java.time.Clock
 
-import com.twitter.finagle._
+import com.twitter.finagle.Service
 import com.twitter.finagle.http.filter.Cors
 import com.twitter.finagle.http.filter.Cors.HttpFilter
 import com.twitter.finagle.http.path.Root
@@ -12,7 +12,7 @@ import io.fintrospect.formats.Html
 import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
 import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
-import io.fintrospect.templating.{RenderMustacheView, View}
+import io.fintrospect.templating.RenderMustacheView
 import io.fintrospect.{Module, ModuleSpec, StaticModule}
 
 /**

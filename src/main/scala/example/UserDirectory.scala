@@ -1,16 +1,17 @@
 package example
 
-import java.lang.Integer._
+
+import java.lang.Integer.parseInt
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
-import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
-import example.UserDirectory._
+import example.UserDirectory.{Lookup, Delete, Create, UserList}
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat._
-import io.fintrospect.parameters._
+import io.fintrospect.formats.json.Json4s.Native.JsonFormat.bodySpec
+import io.fintrospect.parameters.{Body, Form, FormField, NumberParamType, ParameterSpec, Path, StringParamType}
 
 import scala.language.reflectiveCalls
 

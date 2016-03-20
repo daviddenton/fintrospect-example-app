@@ -1,7 +1,7 @@
 package example
 import java.time.Clock
 
-import com.twitter.finagle.{ListeningServer, _}
+import com.twitter.finagle.{Http, ListeningServer}
 import com.twitter.util.Future
 
 /**

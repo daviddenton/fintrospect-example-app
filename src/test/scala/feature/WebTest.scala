@@ -1,7 +1,7 @@
 package feature
 
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Status.Ok
 import env.RunningTestEnvironment
 import io.fintrospect.ContentTypes
 import org.scalatest.{FunSpec, ShouldMatchers}

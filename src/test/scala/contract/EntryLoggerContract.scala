@@ -5,7 +5,7 @@ import java.time.{Clock, Instant, ZoneId}
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Response, Request}
 import com.twitter.util.Await
-import example._
+import example.{UserEntry, Username, EntryLogger}
 import org.scalatest.{FunSpec, ShouldMatchers}
 
 /**

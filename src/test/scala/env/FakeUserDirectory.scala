@@ -1,13 +1,14 @@
 package env
 
 import com.twitter.finagle.Service
-import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response}
-import example.UserDirectory._
 import example._
+import example.UserDirectory.Create
 import io.fintrospect.ServerRoutes
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat._
-import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder._
+import io.fintrospect.formats.ResponseBuilder.toFuture
+import io.fintrospect.formats.json.Json4s.Native.JsonFormat.encode
+import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.toResponseBuilder
 
 import scala.collection.mutable
 

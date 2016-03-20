@@ -2,14 +2,14 @@ package example
 
 import java.time.Clock
 
-import com.twitter.finagle.http.Status._
-import com.twitter.finagle.{Service, Http}
+import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
+import com.twitter.finagle.http.Status.{Created, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import example.EntryLogger.{Entry, Exit, LogList}
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat._
+import io.fintrospect.formats.json.Json4s.Native.JsonFormat.bodySpec
 import io.fintrospect.parameters.Body
 
 object EntryLogger {

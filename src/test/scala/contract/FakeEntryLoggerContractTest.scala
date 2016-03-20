@@ -1,10 +1,10 @@
 package contract
 
 import com.twitter.finagle.http.Response
-import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Status.NotFound
 import com.twitter.util.Await
 import env.FakeEntryLogger
-import example._
+import example.{Username, RemoteSystemProblem}
 import io.fintrospect.testing.OverridableHttpService
 import org.scalatest.BeforeAndAfterEach
 

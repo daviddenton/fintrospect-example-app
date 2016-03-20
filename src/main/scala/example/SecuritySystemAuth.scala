@@ -1,7 +1,7 @@
 package example
 
 import com.twitter.util.Future
-import io.fintrospect.parameters._
+import io.fintrospect.parameters.{ApiKey, Header}
 
 object SecuritySystemAuth {
 

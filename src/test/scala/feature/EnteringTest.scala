@@ -2,9 +2,9 @@ package feature
 
 import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status._
-import example._
+import com.twitter.finagle.http.Status.{BadRequest, NotFound, Unauthorized, Accepted}
 import env.{ResponseStatusAndContent, RunningTestEnvironment}
+import example._
 import org.scalatest.{FunSpec, ShouldMatchers}
 
 class EnteringTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {

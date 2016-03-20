@@ -1,13 +1,15 @@
 package example
 
+
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
-import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Status.Ok
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
-import example.SecuritySystemAuth._
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat._
-import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder._
+import example.SecuritySystemAuth.apiKey
+import io.fintrospect.formats.json.Json4s.Native.JsonFormat.encode
+import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.toResponse
+import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.toResponseBuilder
 import io.fintrospect.{RouteSpec, ServerRoutes}
 
 import scala.language.reflectiveCalls
