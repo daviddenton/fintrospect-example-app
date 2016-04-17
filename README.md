@@ -5,7 +5,7 @@ This is a complete example application which uses the majority of the features o
 
 - HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
-- HTTP response building, including custom JSON library support (Json4S)
+- HTTP response building, including sample JSON library support (Json4S) and auto-case class instance marshalling
 - Automatic invalid request handling
 - Swagger 2.0 documentation and JSON schema generation from example model objects
 - Endpoint security

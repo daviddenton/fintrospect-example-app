@@ -6,13 +6,13 @@ import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.Status.{Accepted, BadRequest, NotFound, Ok, Unauthorized}
 import com.twitter.finagle.http.{Request, Response}
 import example.SecuritySystemAuth.apiKey
+import io.fintrospect.RouteSpec
 import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.implicits._
 import io.fintrospect.parameters.{ParameterSpec, Query, StringParamType}
-import io.fintrospect.{RouteSpec, ServerRoutes}
 
 import scala.language.reflectiveCalls
 
-class KnockKnock(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger) extends ServerRoutes[Request, Response] {
+class KnockKnock(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger) {
   private val username = Query.required(ParameterSpec[Username]("username", None, StringParamType, s => Username(s), _.value.toString))
 
   private val userEntry = Service.mk[Request, Response] {
@@ -29,12 +29,12 @@ class KnockKnock(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLo
         }
   }
 
-  add(RouteSpec("User enters the building")
+  val route = RouteSpec("User enters the building")
     .taking(apiKey) // see SecuritySystemAuth for why this is here
     .taking(username)
     .returning(Ok -> "Access granted")
     .returning(NotFound -> "Unknown user")
     .returning(BadRequest -> "User is already inside building")
     .returning(Unauthorized -> "Incorrect key")
-    .at(Post) / "knock" bindTo userEntry)
+    .at(Post) / "knock" bindTo userEntry
 }

@@ -31,9 +31,9 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
   )
     .withDescriptionPath(_ / "api-docs")
     .securedBy(SecuritySystemAuth())
-    .withRoutes(new KnockKnock(inhabitants, userDirectory, entryLogger))
-    .withRoutes(new WhoIsThere(inhabitants, userDirectory))
-    .withRoutes(new ByeBye(inhabitants, entryLogger))
+    .withRoute(new KnockKnock(inhabitants, userDirectory, entryLogger).route)
+    .withRoute(new WhoIsThere(inhabitants, userDirectory).route)
+    .withRoute(new ByeBye(inhabitants, entryLogger).route)
 
   private val internalModule = ModuleSpec(Root / "internal", SimpleJson()).withRoute(new Ping().route)
 
@@ -42,8 +42,8 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
     new RenderMustacheView(Html.ResponseBuilder, "templates")
   )
     .withDescriptionPath(_ / "sitemap.xml")
-    .withRoutes(new ShowKnownUsers(userDirectory))
-    .withRoutes(new ShowIndex(userDirectory))
+    .withRoute(new ShowKnownUsers(userDirectory).route)
+    .withRoute(new ShowIndex(userDirectory).route)
 
   private val publicModule = StaticModule(Root, "public")
 

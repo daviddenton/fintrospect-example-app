@@ -7,13 +7,13 @@ import com.twitter.finagle.http.Status.Ok
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
 import example.SecuritySystemAuth.apiKey
+import io.fintrospect.RouteSpec
 import io.fintrospect.formats.json.Json4s.Native.JsonFormat.encode
 import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.implicits._
-import io.fintrospect.{RouteSpec, ServerRoutes}
 
 import scala.language.reflectiveCalls
 
-class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) extends ServerRoutes[Request, Response] {
+class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory)  {
 
   private val listUsers = Service.mk[Request, Response] {
     request =>
@@ -22,8 +22,8 @@ class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) extends
         .map(us => Ok(encode(us)))
   }
 
-  add(RouteSpec("List current users in the building")
+  val route = RouteSpec("List current users in the building")
     .taking(apiKey) // see SecuritySystemAuth for why this is here
     .returning(Ok(encode(Seq(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))))))
-    .at(Get) / "whoIsThere" bindTo listUsers)
+    .at(Get) / "whoIsThere" bindTo listUsers
 }
