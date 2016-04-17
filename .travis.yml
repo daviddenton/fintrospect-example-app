@@ -2,6 +2,10 @@ language: scala
 scala:
     - 2.11.7
 script:
-    - sbt clean test
+    - sbt clean coverage test
+    - sbt coveralls
 jdk:
   - oraclejdk8
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
