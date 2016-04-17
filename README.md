@@ -1,5 +1,8 @@
 # fintrospect sample application 
 
+<a href="https://travis-ci.org/daviddenton/fintrospect-example-app" target="_top"><img src="https://travis-ci.org/daviddenton/fintrospect-example-app.svg?branch=master"/></a>&nbsp;&nbsp;&nbsp;
+<a href='https://coveralls.io/github/daviddenton/fintrospect-example-app?branch=master'><img src='https://coveralls.io/repos/github/daviddenton/fintrospect-example-app/badge.svg?branch=master' alt='Coverage Status' /></a>
+
 #### about
 This is a complete example application which uses the majority of the features of the [Fintrospect](http://fintrospect.io) library:
 
