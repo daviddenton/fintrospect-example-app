@@ -12,7 +12,7 @@ import io.fintrospect.formats.Html
 import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
 import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
-import io.fintrospect.templating.RenderMustacheView
+import io.fintrospect.templating.{MustacheTemplates, RenderView}
 import io.fintrospect.{Module, ModuleSpec, StaticModule}
 
 /**
@@ -39,7 +39,7 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
 
   private val webModule = ModuleSpec(Root,
     new SiteMapModuleRenderer(new URL("http://my.security.system")),
-    new RenderMustacheView(Html.ResponseBuilder, "templates")
+    new RenderView(Html.ResponseBuilder, MustacheTemplates.CachingClasspath("templates"))
   )
     .withDescriptionPath(_ / "sitemap.xml")
     .withRoute(new ShowKnownUsers(userDirectory).route)
