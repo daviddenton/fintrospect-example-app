@@ -8,10 +8,10 @@ import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
-import example.UserDirectory.{Lookup, Delete, Create, UserList}
+import example.UserDirectory.{Create, Delete, Lookup, UserList}
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.json.Json4s.Native.JsonFormat.bodySpec
-import io.fintrospect.parameters.{Body, Form, FormField, NumberParamType, ParameterSpec, Path, StringParamType}
+import io.fintrospect.parameters.{Body, Form, FormField, NumberParamType, ParameterSpec, Path, StringParamType, UniBody}
 
 import scala.language.reflectiveCalls
 
@@ -50,7 +50,7 @@ object UserDirectory {
   */
 class UserDirectory(client: Service[Request, Response]) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, responseBody: Body[T]): Response => Future[T] =
+  private def expectStatusAndExtract[T](expectedStatus: Status, responseBody: UniBody[T]): Response => Future[T] =
     r => if (r.status == expectedStatus) Future.value(responseBody <-- r)
     else Future.exception(RemoteSystemProblem("user directory", r.status))
 

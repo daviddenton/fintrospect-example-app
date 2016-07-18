@@ -10,7 +10,7 @@ import com.twitter.util.Future
 import example.EntryLogger.{Entry, Exit, LogList}
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.json.Json4s.Native.JsonFormat.bodySpec
-import io.fintrospect.parameters.Body
+import io.fintrospect.parameters.{Body, UniBody}
 
 object EntryLogger {
 
@@ -34,7 +34,7 @@ object EntryLogger {
   */
 class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, b: Body[T]): Response => Future[T] = {
+  private def expectStatusAndExtract[T](expectedStatus: Status, b: UniBody[T]): Response => Future[T] = {
     r => if (r.status == expectedStatus) Future.value(b <-- r)
     else Future.exception(RemoteSystemProblem("entry logger", r.status))
   }
