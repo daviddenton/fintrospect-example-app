@@ -8,12 +8,13 @@ import com.twitter.finagle.http.filter.Cors
 import com.twitter.finagle.http.filter.Cors.HttpFilter
 import com.twitter.finagle.http.path.Root
 import com.twitter.finagle.http.{Request, Response}
+import io.fintrospect.ResourceLoader.Classpath
 import io.fintrospect.formats.Html
 import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
 import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
 import io.fintrospect.templating.{MustacheTemplates, RenderView}
-import io.fintrospect.{Module, ModuleSpec, StaticModule}
+import io.fintrospect.{Module, ModuleSpec, ResourceLoader, StaticModule}
 
 /**
   * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
@@ -45,7 +46,7 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
     .withRoute(new ShowKnownUsers(userDirectory).route)
     .withRoute(new ShowIndex(userDirectory).route)
 
-  private val publicModule = StaticModule(Root, "public")
+  private val publicModule = StaticModule(Root, Classpath("public"))
 
   // use CORs settings that suit your particular use-case. This one allows any cross-domain traffic at all and is applied
   // to all routes in the system
