@@ -5,7 +5,7 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.{Ok, Unauthorized}
 import env.{ResponseStatusAndContent, RunningTestEnvironment}
 import example.{EmailAddress, Id, User, Username}
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat.{decode, parse}
+import io.fintrospect.formats.Json4s.JsonFormat.{decode, parse}
 import org.scalatest.{FunSpec, ShouldMatchers}
 
 class ReportInhabitantsTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {

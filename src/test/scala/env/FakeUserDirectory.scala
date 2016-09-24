@@ -6,8 +6,8 @@ import com.twitter.finagle.http.{Request, Response}
 import example.UserDirectory.Create
 import example._
 import io.fintrospect.ServerRoutes
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat.encode
-import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.implicits._
+import io.fintrospect.formats.Json4s.JsonFormat.encode
+import io.fintrospect.formats.Json4s.ResponseBuilder.implicits._
 
 import scala.collection.mutable
 

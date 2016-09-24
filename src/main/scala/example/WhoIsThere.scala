@@ -8,8 +8,8 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
 import example.SecuritySystemAuth.apiKey
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat.encode
-import io.fintrospect.formats.json.Json4s.Native.ResponseBuilder.implicits._
+import io.fintrospect.formats.Json4s.JsonFormat.encode
+import io.fintrospect.formats.Json4s.ResponseBuilder.implicits._
 
 import scala.language.reflectiveCalls
 

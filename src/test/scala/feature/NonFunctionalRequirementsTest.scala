@@ -4,7 +4,7 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import env.RunningTestEnvironment
 import io.fintrospect.ContentTypes
-import io.fintrospect.formats.json.Json4s.Native.JsonFormat
+import io.fintrospect.formats.Json4s.JsonFormat
 import org.json4s.JString
 import org.scalatest.{FunSpec, ShouldMatchers}
 
