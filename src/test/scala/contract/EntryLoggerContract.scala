@@ -3,15 +3,15 @@ package contract
 import java.time.{Clock, Instant, ZoneId}
 
 import com.twitter.finagle.Service
-import com.twitter.finagle.http.{Response, Request}
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Await
-import example.{UserEntry, Username, EntryLogger}
-import org.scalatest.{FunSpec, ShouldMatchers}
+import example.{EntryLogger, UserEntry, Username}
+import org.scalatest.{FunSpec, Matchers}
 
 /**
- * This represents the contract that both the real and fake EntryLogger servers will adhere to.
- */
-trait EntryLoggerContract extends FunSpec with ShouldMatchers {
+  * This represents the contract that both the real and fake EntryLogger servers will adhere to.
+  */
+trait EntryLoggerContract extends FunSpec with Matchers {
   def service: Service[Request, Response]
 
   private val time = Instant.now()

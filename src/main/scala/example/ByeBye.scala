@@ -7,7 +7,7 @@ import com.twitter.finagle.http.Status.{Accepted, BadRequest, Ok, Unauthorized}
 import com.twitter.finagle.http.{Request, Response}
 import example.SecuritySystemAuth.apiKey
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Json4s.ResponseBuilder.implicits._
+import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
 import io.fintrospect.parameters.{ParameterSpec, Query, StringParamType}
 
 import scala.language.reflectiveCalls

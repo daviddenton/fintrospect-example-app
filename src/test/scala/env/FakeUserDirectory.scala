@@ -5,9 +5,10 @@ import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response}
 import example.UserDirectory.Create
 import example._
+import io.circe.generic.auto._
 import io.fintrospect.ServerRoutes
-import io.fintrospect.formats.Json4s.JsonFormat.encode
-import io.fintrospect.formats.Json4s.ResponseBuilder.implicits._
+import io.fintrospect.formats.Circe.JsonFormat.encode
+import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
 
 import scala.collection.mutable
 
@@ -25,7 +26,7 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
   add(UserDirectory.Create.route.bindTo(Service.mk[Request, Response] {
     request => {
       val form = UserDirectory.Create.form <-- request
-      val (username, email) = form <--(Create.username, Create.email)
+      val (username, email) = form <-- (Create.username, Create.email)
       val newUser = User(Id(users.size), Username(username), EmailAddress(email))
       users(newUser.id) = newUser
       Created(encode(newUser))

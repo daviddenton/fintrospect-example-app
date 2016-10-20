@@ -1,15 +1,15 @@
 package contract
 
 import com.twitter.finagle.Service
-import com.twitter.finagle.http.{Response, Request}
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Await
-import example.{User, EmailAddress, Username, UserDirectory}
-import org.scalatest.{FunSpec, ShouldMatchers}
+import example.{EmailAddress, User, UserDirectory, Username}
+import org.scalatest.{FunSpec, Matchers}
 
 /**
- * This represents the contract that both the real and fake UserDirectory servers will adhere to.
- */
-trait UserDirectoryContract extends FunSpec with ShouldMatchers {
+  * This represents the contract that both the real and fake UserDirectory servers will adhere to.
+  */
+trait UserDirectoryContract extends FunSpec with Matchers {
   def service: Service[Request, Response]
 
   val userDirectory = new UserDirectory(service)

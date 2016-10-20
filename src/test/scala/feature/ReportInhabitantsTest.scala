@@ -5,10 +5,11 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.{Ok, Unauthorized}
 import env.{ResponseStatusAndContent, RunningTestEnvironment}
 import example.{EmailAddress, Id, User, Username}
-import io.fintrospect.formats.Json4s.JsonFormat.{decode, parse}
-import org.scalatest.{FunSpec, ShouldMatchers}
+import io.circe.generic.auto._
+import io.fintrospect.formats.Circe.JsonFormat.{decode, parse}
+import org.scalatest.{FunSpec, Matchers}
 
-class ReportInhabitantsTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {
+class ReportInhabitantsTest extends FunSpec with Matchers with RunningTestEnvironment {
 
   describe("whoIsThere endpoint validation") {
     it("is protected with a secret key") {

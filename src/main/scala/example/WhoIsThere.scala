@@ -7,13 +7,14 @@ import com.twitter.finagle.http.Status.Ok
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
 import example.SecuritySystemAuth.apiKey
+import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Json4s.JsonFormat.encode
-import io.fintrospect.formats.Json4s.ResponseBuilder.implicits._
+import io.fintrospect.formats.Circe.JsonFormat.encode
+import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
 
 import scala.language.reflectiveCalls
 
-class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory)  {
+class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) {
 
   private val listUsers = Service.mk[Request, Response] {
     request =>

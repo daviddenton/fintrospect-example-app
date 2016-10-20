@@ -2,12 +2,12 @@ package feature
 
 import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status.{BadRequest, Unauthorized, Accepted}
+import com.twitter.finagle.http.Status.{Accepted, BadRequest, Unauthorized}
 import env.{ResponseStatusAndContent, RunningTestEnvironment}
 import example._
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class ExitingTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {
+class ExitingTest extends FunSpec with Matchers with RunningTestEnvironment {
 
   describe("exit endpoint") {
     it("rejects missing username in exit endpoint") {

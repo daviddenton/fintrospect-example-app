@@ -4,14 +4,14 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import env.RunningTestEnvironment
 import io.fintrospect.ContentTypes
-import io.fintrospect.formats.Json4s.JsonFormat
-import org.json4s.JString
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
 import scala.xml.Utility.trim
-import scala.xml.{Utility, XML}
+import scala.xml.XML
+import io.circe.optics.JsonPath._
+import io.fintrospect.formats.Circe.JsonFormat
 
-class NonFunctionalRequirementsTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {
+class NonFunctionalRequirementsTest extends FunSpec with Matchers with RunningTestEnvironment {
 
   it("responds to ping") {
     val response = env.responseTo(Request("/internal/ping"))
@@ -30,14 +30,14 @@ class NonFunctionalRequirementsTest extends FunSpec with ShouldMatchers with Run
     response.status shouldBe Ok
     response.contentType.startsWith(ContentTypes.APPLICATION_XML.value) shouldBe true
     val siteMap = trim(XML.loadString(response.content))
-    ((siteMap \\ "urlset" \\ "url")(0) \\ "loc").text shouldBe "http://my.security.system/known"
-    ((siteMap \\ "urlset" \\ "url")(1) \\ "loc").text shouldBe "http://my.security.system"
+    ((siteMap \\ "urlset" \\ "url") (0) \\ "loc").text shouldBe "http://my.security.system/known"
+    ((siteMap \\ "urlset" \\ "url") (1) \\ "loc").text shouldBe "http://my.security.system"
   }
 
   it("provides API documentation in swagger 2.0 format") {
     val response = env.responseTo(Request("/security/api-docs"))
     response.status shouldBe Ok
 
-    JsonFormat.parse(response.content).children.head.asInstanceOf[JString].values shouldBe "2.0"
+    root.swagger.string.getOption(JsonFormat.parse(response.content)) shouldBe Option("2.0")
   }
 }

@@ -4,9 +4,9 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import env.RunningTestEnvironment
 import io.fintrospect.ContentTypes
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class WebTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {
+class WebTest extends FunSpec with Matchers with RunningTestEnvironment {
 
   it("homepage") {
     val response = env.responseTo(Request("/"))

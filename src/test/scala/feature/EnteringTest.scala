@@ -2,12 +2,12 @@ package feature
 
 import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status.{BadRequest, NotFound, Unauthorized, Accepted}
+import com.twitter.finagle.http.Status.{Accepted, BadRequest, NotFound, Unauthorized}
 import env.{ResponseStatusAndContent, RunningTestEnvironment}
 import example._
-import org.scalatest.{FunSpec, ShouldMatchers}
+import org.scalatest.{FunSpec, Matchers}
 
-class EnteringTest extends FunSpec with ShouldMatchers with RunningTestEnvironment {
+class EnteringTest extends FunSpec with Matchers with RunningTestEnvironment {
 
   describe("when a user is unknown") {
     it("does not allow user in") {

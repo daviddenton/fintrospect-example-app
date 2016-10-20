@@ -9,8 +9,9 @@ import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import example.UserDirectory.{Create, Delete, Lookup, UserList}
+import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Json4s.JsonFormat.bodySpec
+import io.fintrospect.formats.Circe.JsonFormat.bodySpec
 import io.fintrospect.parameters.{Body, Form, FormField, NumberParamType, ParameterSpec, Path, StringParamType, UniBody}
 
 import scala.language.reflectiveCalls

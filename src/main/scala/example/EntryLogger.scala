@@ -8,9 +8,11 @@ import com.twitter.finagle.http.Status.{Created, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import example.EntryLogger.{Entry, Exit, LogList}
+import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Json4s.JsonFormat.bodySpec
+import io.fintrospect.formats.Circe.JsonFormat.bodySpec
 import io.fintrospect.parameters.{Body, UniBody}
+
 
 object EntryLogger {
 
@@ -27,6 +29,7 @@ object EntryLogger {
   object LogList {
     val route = RouteSpec().at(Get) / "list"
   }
+
 }
 
 /**

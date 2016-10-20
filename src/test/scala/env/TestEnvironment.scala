@@ -2,7 +2,7 @@ package env
 
 import java.time.{Clock, Instant, ZoneId}
 
-import com.twitter.finagle.http.{Response, Request}
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Await
 import example.SecuritySystem
 import io.fintrospect.testing.OverridableHttpService
