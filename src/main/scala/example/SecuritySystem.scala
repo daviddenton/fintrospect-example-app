@@ -14,7 +14,7 @@ import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
 import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
 import io.fintrospect.templating.{MustacheTemplates, RenderView}
-import io.fintrospect.{Module, ModuleSpec, ResourceLoader, StaticModule}
+import io.fintrospect.{Module, ModuleSpec, StaticModule}
 
 /**
   * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
@@ -52,7 +52,7 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
   // to all routes in the system
   private val globalFilter = new HttpFilter(Cors.UnsafePermissivePolicy).andThen(CatchAll)
 
-  val service = globalFilter.andThen(
+  val service: Service[Request, Response] = globalFilter.andThen(
     Module.toService(Module.combine(serviceModule, internalModule, publicModule, webModule))
   )
 }

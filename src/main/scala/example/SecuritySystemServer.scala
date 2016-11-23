@@ -9,17 +9,17 @@ import com.twitter.util.Future
   */
 class SecuritySystemServer(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: Int) {
 
-  private var server: ListeningServer = null
+  private var server: ListeningServer = _
 
-  val service = new SecuritySystem(
+  private val service = new SecuritySystem(
     Http.newService(s"localhost:$userDirectoryPort"),
     Http.newService(s"localhost:$entryLoggerPort"),
     Clock.systemUTC()).service
 
-  def start() = {
+  def start(): Future[Unit] = {
     server = Http.serve(s":$serverPort", service)
     Future.Done
   }
 
-  def stop() = server.close()
+  def stop(): Future[Unit] = server.close()
 }
