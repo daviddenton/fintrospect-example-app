@@ -14,7 +14,7 @@ import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
 import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
 import io.fintrospect.templating.{MustacheTemplates, RenderView}
-import io.fintrospect.{Module, ModuleSpec, StaticModule}
+import io.fintrospect.{Module, ModuleSpec, RouteModule, StaticModule}
 
 /**
   * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
@@ -36,9 +36,9 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
     .withRoute(new WhoIsThere(inhabitants, userDirectory).route)
     .withRoute(new ByeBye(inhabitants, entryLogger).route)
 
-  private val internalModule = ModuleSpec(Root / "internal", SimpleJson()).withRoute(new Ping().route)
+  private val internalModule = RouteModule(Root / "internal", SimpleJson()).withRoute(new Ping().route)
 
-  private val webModule = ModuleSpec(Root,
+  private val webModule = RouteModule(Root,
     new SiteMapModuleRenderer(new URL("http://my.security.system")),
     new RenderView(Html.ResponseBuilder, MustacheTemplates.CachingClasspath("templates"))
   )
@@ -53,6 +53,6 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
   private val globalFilter = new HttpFilter(Cors.UnsafePermissivePolicy).andThen(CatchAll)
 
   val service: Service[Request, Response] = globalFilter.andThen(
-    Module.toService(Module.combine(serviceModule, internalModule, publicModule, webModule))
+    Module.combine(serviceModule, internalModule, publicModule, webModule).toService
   )
 }
