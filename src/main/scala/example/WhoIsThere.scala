@@ -17,7 +17,7 @@ import scala.language.reflectiveCalls
 class WhoIsThere(inhabitants: Inhabitants, userDirectory: UserDirectory) {
 
   private val listUsers = Service.mk[Request, Response] {
-    request =>
+    _ =>
       Future.collect(inhabitants.map(userDirectory.lookup).toSeq)
         .map(_.flatten[User])
         .map(us => Ok(encode(us)))

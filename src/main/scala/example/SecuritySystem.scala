@@ -26,7 +26,7 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
   private val entryLogger = new EntryLogger(entryLoggerClient, clock)
   private val inhabitants = new Inhabitants
 
-  private val serviceModule = ModuleSpec(Root / "security",
+  private val serviceModule = RouteModule(Root / "security",
     Swagger2dot0Json(ApiInfo("Security System API", "1.0", Option("Known users are `Bob`, `Sue`, `Rita`. Security key is `realSecret`"))),
     new RequestCountingFilter(System.out)
   )

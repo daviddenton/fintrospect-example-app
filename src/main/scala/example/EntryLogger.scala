@@ -10,8 +10,8 @@ import com.twitter.util.Future
 import example.EntryLogger.{Entry, Exit, LogList}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Circe.JsonFormat.bodySpec
-import io.fintrospect.parameters.{Body, UniBody}
+import io.fintrospect.formats.Circe.bodySpec
+import io.fintrospect.parameters.Body
 
 
 object EntryLogger {
@@ -37,9 +37,10 @@ object EntryLogger {
   */
 class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, b: UniBody[T]): Response => Future[T] = {
-    r => if (r.status == expectedStatus) Future.value(b <-- r)
-    else Future.exception(RemoteSystemProblem("entry logger", r.status))
+  private def expectStatusAndExtract[T](expectedStatus: Status, b: Body[T]): Response => Future[T] = {
+    r =>
+      if (r.status == expectedStatus) Future.value(b <-- r)
+      else Future.exception(RemoteSystemProblem("entry logger", r.status))
   }
 
   private val entryClient = Entry.route bindToClient client
@@ -56,5 +57,7 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
   private val listClient = LogList.route bindToClient client
 
-  def list(): Future[Seq[UserEntry]] = listClient().flatMap(expectStatusAndExtract(Ok, Body(bodySpec[Seq[UserEntry]]())))
+  def list(): Future[Seq[UserEntry]] = {
+    listClient().flatMap(expectStatusAndExtract(Ok, Body(bodySpec[Seq[UserEntry]]())))
+  }
 }
