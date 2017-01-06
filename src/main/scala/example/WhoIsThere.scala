@@ -3,14 +3,13 @@ package example
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
-import com.twitter.finagle.http.Status.Ok
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
 import example.SecuritySystemAuth.apiKey
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.JsonFormat.encode
-import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
+import io.fintrospect.formats.Circe.ResponseBuilder._
 
 import scala.language.reflectiveCalls
 

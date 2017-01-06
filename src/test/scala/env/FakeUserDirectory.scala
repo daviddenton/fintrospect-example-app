@@ -1,14 +1,14 @@
 package env
 
 import com.twitter.finagle.Service
-import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response}
+import com.twitter.util.Future
 import example.UserDirectory.Create
 import example._
 import io.circe.generic.auto._
 import io.fintrospect.ServerRoutes
-import io.fintrospect.formats.Circe.JsonFormat.encode
-import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
+import io.fintrospect.formats.Circe.JsonFormat._
+import io.fintrospect.formats.Circe.ResponseBuilder._
 
 import scala.collection.mutable
 
@@ -34,10 +34,11 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
   }))
 
   private def delete(id: Id) = Service.mk[Request, Response] {
-    request => users
-      .get(id)
-      .map { user => users -= id; Ok().toFuture }
-      .getOrElse(NotFound())
+    request =>
+      users
+        .get(id)
+        .map { user => users -= id; Ok(encode(user)).toFuture }
+        .getOrElse[Future[Response]](NotFound(encode(Message("no such user"))))
   }
 
   add(UserDirectory.Delete.route.bindTo(delete))
@@ -48,7 +49,7 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
         .values
         .find(_.name == username)
         .map { found => Ok(encode(found)).toFuture }
-        .getOrElse(NotFound())
+        .getOrElse(NotFound(encode(Message("no such user"))))
   }
 
   add(UserDirectory.Lookup.route.bindTo(lookup))

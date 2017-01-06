@@ -3,18 +3,19 @@ package example
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Post
-import com.twitter.finagle.http.Status.{Accepted, BadRequest, Ok, Unauthorized}
-import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.http.{Request, Response, Status}
 import example.SecuritySystemAuth.apiKey
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
-import io.fintrospect.parameters.{ParameterSpec, Query, StringParamType}
+import io.circe.generic.auto._
+import io.fintrospect.formats.Circe.JsonFormat.encode
+import io.fintrospect.formats.Circe.ResponseBuilder._
+import io.fintrospect.parameters.{ParameterSpec, Query}
 
 import scala.language.reflectiveCalls
 
 class ByeBye(inhabitants: Inhabitants, entryLogger: EntryLogger) {
 
-  private val username = Query.required(ParameterSpec[Username]("username", None, StringParamType, s => Username(s), _.value.toString))
+  private val username = Query.required(ParameterSpec.string("username").map(s => Username(s), (u: Username) => u.value.toString))
 
   private val userExit = Service.mk[Request, Response] {
     request => {
@@ -22,16 +23,16 @@ class ByeBye(inhabitants: Inhabitants, entryLogger: EntryLogger) {
       if (inhabitants.remove(exiting))
         entryLogger
           .exit(exiting)
-          .map(_ => Accepted())
-      else BadRequest()
+          .map(_ => Accepted(encode(Message("processing"))))
+      else BadRequest(encode(Message("User is not inside building")))
     }
   }
 
   val route = RouteSpec("User exits the building")
     .taking(apiKey) // see SecuritySystemAuth for why this is here
     .taking(username)
-    .returning(Ok -> "Exit granted")
-    .returning(BadRequest -> "User is not inside building")
-    .returning(Unauthorized -> "Incorrect key")
+    .returning(Status.Ok -> "Exit granted")
+    .returning(Status.BadRequest -> "User is not inside building")
+    .returning(Status.Unauthorized -> "Incorrect key")
     .at(Post) / "bye" bindTo userExit
 }

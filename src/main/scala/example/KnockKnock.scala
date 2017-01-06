@@ -3,17 +3,18 @@ package example
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Post
-import com.twitter.finagle.http.Status.{Accepted, BadRequest, NotFound, Ok, Unauthorized}
-import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.http.{Request, Response, Status}
 import example.SecuritySystemAuth.apiKey
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
-import io.fintrospect.parameters.{ParameterSpec, Query, StringParamType}
+import io.circe.generic.auto._
+import io.fintrospect.formats.Circe.JsonFormat.encode
+import io.fintrospect.formats.Circe.ResponseBuilder._
+import io.fintrospect.parameters.{ParameterSpec, Query}
 
 import scala.language.reflectiveCalls
 
 class KnockKnock(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger) {
-  private val username = Query.required(ParameterSpec[Username]("username", None, StringParamType, s => Username(s), _.value.toString))
+  private val username = Query.required(ParameterSpec.string("username").map(s => Username(s), (u: Username) => u.value.toString))
 
   private val userEntry = Service.mk[Request, Response] {
     request =>
@@ -23,18 +24,18 @@ class KnockKnock(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLo
             if (inhabitants.add(user.name))
               entryLogger
                 .enter(user.name)
-                .map(ue => Accepted())
-            else BadRequest()
-          case None => NotFound()
+                .map(ue => Accepted(encode(Message("Access granted"))))
+            else BadRequest(encode(Message("User is already inside building")))
+          case None => NotFound(encode(Message("Unknown user")))
         }
   }
 
   val route = RouteSpec("User enters the building")
     .taking(apiKey) // see SecuritySystemAuth for why this is here
     .taking(username)
-    .returning(Ok -> "Access granted")
-    .returning(NotFound -> "Unknown user")
-    .returning(BadRequest -> "User is already inside building")
-    .returning(Unauthorized -> "Incorrect key")
+    .returning(Status.Accepted -> "Access granted")
+    .returning(Status.NotFound -> "Unknown user")
+    .returning(Status.BadRequest -> "User is already inside building")
+    .returning(Status.Unauthorized -> "Incorrect key")
     .at(Post) / "knock" bindTo userEntry
 }
