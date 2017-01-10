@@ -22,7 +22,7 @@ class SecuritySystem(userDirectoryHttp: Service[Request, Response], entryLoggerH
 
   val service: Service[Request, Response] = combine(
     Api.module(inhabitants, userDirectory, entryLogger),
-    Diagnostic.module(),
+    Diagnostic.module(clock),
     Web.module(userDirectory)
   ).toService
 }

@@ -3,13 +3,13 @@ package feature
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import env.RunningTestEnvironment
+import io.circe.optics.JsonPath._
 import io.fintrospect.ContentTypes
+import io.fintrospect.formats.Circe.JsonFormat
 import org.scalatest.{FunSpec, Matchers}
 
 import scala.xml.Utility.trim
 import scala.xml.XML
-import io.circe.optics.JsonPath._
-import io.fintrospect.formats.Circe.JsonFormat
 
 class NonFunctionalRequirementsTest extends FunSpec with Matchers with RunningTestEnvironment {
 
@@ -17,6 +17,12 @@ class NonFunctionalRequirementsTest extends FunSpec with Matchers with RunningTe
     val response = env.responseTo(Request("/internal/ping"))
     response.status shouldBe Ok
     response.content shouldBe "pong"
+  }
+
+  it("responds to uptime") {
+    val response = env.responseTo(Request("/internal/uptime"))
+    response.status shouldBe Ok
+    response.content shouldBe "uptime is: 0s"
   }
 
   it("serves static content") {

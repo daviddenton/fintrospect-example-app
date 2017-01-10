@@ -18,7 +18,7 @@ class SecuritySystemServer(serverPort: Port, userDirectoryAuthority: Authority, 
     Clock.systemUTC()).service
 
   def start(): Future[Unit] = {
-    server = Http.serve(s":$serverPort", service)
+    server = Http.serve(s":$serverPort", CatchAll.andThen(service))
     Future.Done
   }
 
