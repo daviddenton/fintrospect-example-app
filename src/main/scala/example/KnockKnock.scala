@@ -1,12 +1,10 @@
 package example
 
-
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.{Request, Response, Status}
-import example.SecuritySystemAuth.apiKey
-import io.fintrospect.RouteSpec
 import io.circe.generic.auto._
+import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.JsonFormat.encode
 import io.fintrospect.formats.Circe.ResponseBuilder._
 import io.fintrospect.parameters.{ParameterSpec, Query}
@@ -31,7 +29,6 @@ class KnockKnock(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLo
   }
 
   val route = RouteSpec("User enters the building")
-    .taking(apiKey) // see SecuritySystemAuth for why this is here
     .taking(username)
     .returning(Status.Accepted -> "Access granted")
     .returning(Status.NotFound -> "Unknown user")

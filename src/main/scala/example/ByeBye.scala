@@ -4,9 +4,8 @@ package example
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.{Request, Response, Status}
-import example.SecuritySystemAuth.apiKey
-import io.fintrospect.RouteSpec
 import io.circe.generic.auto._
+import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.JsonFormat.encode
 import io.fintrospect.formats.Circe.ResponseBuilder._
 import io.fintrospect.parameters.{ParameterSpec, Query}
@@ -29,7 +28,6 @@ class ByeBye(inhabitants: Inhabitants, entryLogger: EntryLogger) {
   }
 
   val route = RouteSpec("User exits the building")
-    .taking(apiKey) // see SecuritySystemAuth for why this is here
     .taking(username)
     .returning(Status.Ok -> "Exit granted")
     .returning(Status.BadRequest -> "User is not inside building")
