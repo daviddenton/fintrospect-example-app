@@ -4,8 +4,10 @@ import java.time.{Clock, Instant, ZoneId}
 
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Await
-import example.SecuritySystem
+import example.{Event, SecuritySystem}
 import io.fintrospect.testing.OverridableHttpService
+
+import scala.collection.mutable
 
 class TestEnvironment() {
 
@@ -17,9 +19,12 @@ class TestEnvironment() {
   val userDirectoryHttp = new OverridableHttpService[Response](userDirectory)
   val entryLoggerHttp = new OverridableHttpService[Response](entryLogger)
 
+  val events = mutable.MutableList[Event]()
+
   private val securitySystemSvc = new SecuritySystem(
     userDirectoryHttp.service,
     entryLoggerHttp.service,
+    events += _,
     clock).service
 
   def responseTo(request: Request) = {

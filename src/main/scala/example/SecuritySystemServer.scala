@@ -15,6 +15,7 @@ class SecuritySystemServer(serverPort: Port, userDirectoryAuthority: Authority, 
   private val service = new SecuritySystem(
     Http.newService(userDirectoryAuthority.toString()),
     Http.newService(entryLoggerAuthority.toString()),
+    (s: Event) => println(s),
     Clock.systemUTC()).service
 
   def start(): Future[Unit] = {
