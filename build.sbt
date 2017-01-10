@@ -6,10 +6,12 @@ resolvers += "JCenter" at "https://jcenter.bintray.com"
 
 mainClass in(Test, run) := Some("env.RunnableEnvironment")
 
+val fintrospectVersion = "14.1.0"
+
 libraryDependencies ++= Seq(
-  "io.fintrospect" %% "fintrospect-core" % "14.0.0",
-  "io.fintrospect" %% "fintrospect-circe" % "14.0.0",
-  "io.fintrospect" %% "fintrospect-mustache" % "14.0.0",
+  "io.fintrospect" %% "fintrospect-core" % fintrospectVersion,
+  "io.fintrospect" %% "fintrospect-circe" % fintrospectVersion,
+  "io.fintrospect" %% "fintrospect-mustache" % fintrospectVersion,
   "io.circe" %% "circe-optics" % "0.6.1",
   "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 )

@@ -1,5 +1,6 @@
 package example
 
+import com.twitter.finagle.Service
 import com.twitter.util.Future
 import io.fintrospect.ApiKey
 import io.fintrospect.parameters.Header
@@ -14,5 +15,5 @@ object SecuritySystemAuth {
     */
   val apiKey = Header.required.string("key")
 
-  def apply() = ApiKey(apiKey, (key: String) => Future.value(key.equals("realSecret")))
+  def apply() = ApiKey(apiKey, Service.mk { key: String => Future.value(key.equals("realSecret")) })
 }

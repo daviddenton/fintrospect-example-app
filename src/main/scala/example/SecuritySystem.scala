@@ -14,7 +14,7 @@ import io.fintrospect.renderers.SiteMapModuleRenderer
 import io.fintrospect.renderers.simplejson.SimpleJson
 import io.fintrospect.renderers.swagger2dot0.{ApiInfo, Swagger2dot0Json}
 import io.fintrospect.templating.{MustacheTemplates, RenderView}
-import io.fintrospect.{Module, ModuleSpec, RouteModule, StaticModule}
+import io.fintrospect.{Module, RouteModule, StaticModule}
 
 /**
   * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
@@ -27,7 +27,7 @@ class SecuritySystem(userDirectoryClient: Service[Request, Response], entryLogge
   private val inhabitants = new Inhabitants
 
   private val serviceModule = RouteModule(Root / "security",
-    Swagger2dot0Json(ApiInfo("Security System API", "1.0", Option("Known users are `Bob`, `Sue`, `Rita`. Security key is `realSecret`"))),
+    Swagger2dot0Json(ApiInfo("Security System API", "1.0", "Known users are `Bob`, `Sue`, `Rita`. Security key is `realSecret`")),
     new RequestCountingFilter(System.out)
   )
     .withDescriptionPath(_ / "api-docs")
