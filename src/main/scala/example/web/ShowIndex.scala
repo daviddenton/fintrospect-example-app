@@ -6,16 +6,16 @@ import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
 import example.external.UserDirectory
-import io.fintrospect.RouteSpec
 import io.fintrospect.templating.View
+import io.fintrospect.{RouteSpec, ServerRoute}
 
 case class Index(time: String, browser: String) extends View
 
-class ShowIndex(userDirectory: UserDirectory) {
-
-  private val index = Service.mk[Request, View] {
-    request => Index(LocalDateTime.now().toString, request.headerMap.getOrElse("User-Agent", "unknown"))
+object ShowIndex {
+  def route(userDirectory: UserDirectory): ServerRoute[Request, View] = {
+    val service = Service.mk[Request, View] {
+      request => Index(LocalDateTime.now().toString, request.headerMap.getOrElse("User-Agent", "unknown"))
+    }
+    RouteSpec("Index").at(Get) bindTo service
   }
-
-  val route = RouteSpec("Index").at(Get) bindTo index
 }

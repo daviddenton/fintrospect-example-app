@@ -19,11 +19,11 @@ import scala.collection.mutable
   */
 class FakeUserDirectory extends ServerRoutes[Request, Response] {
 
-  private var users: mutable.Map[Id, User] = null
+  private val users = mutable.Map[Id, User]()
 
   def contains(newUser: User): Unit = users(newUser.id) = newUser
 
-  def reset() = users = mutable.Map[Id, User]()
+  def reset() = users.clear()
 
   add(UserDirectory.Create.route.bindTo(Service.mk[Request, Response] {
     request => {
@@ -36,7 +36,7 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
   }))
 
   private def delete(id: Id) = Service.mk[Request, Response] {
-    request =>
+    _ =>
       users
         .get(id)
         .map { user => users -= id; Ok(encode(user)).toFuture }
@@ -46,7 +46,7 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
   add(UserDirectory.Delete.route.bindTo(delete))
 
   private def lookup(username: Username) = Service.mk[Request, Response] {
-    request: Request =>
+    _: Request =>
       users
         .values
         .find(_.name == username)

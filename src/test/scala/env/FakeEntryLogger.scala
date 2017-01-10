@@ -14,7 +14,7 @@ import io.fintrospect.formats.Circe.ResponseBuilder._
   */
 class FakeEntryLogger extends ServerRoutes[Request, Response] {
 
-  var entries: Seq[UserEntry] = null
+  var entries: Seq[UserEntry] = Nil
 
   def reset() = entries = Seq[UserEntry]()
 
