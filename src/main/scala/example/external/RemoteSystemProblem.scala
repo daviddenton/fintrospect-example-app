@@ -1,4 +1,4 @@
-package example
+package example.external
 
 import com.twitter.finagle.http.Status
 

@@ -3,7 +3,8 @@ package contract
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Await
-import example.{EmailAddress, User, UserDirectory, Username}
+import example.external.UserDirectory
+import example.{EmailAddress, User, Username}
 import org.scalatest.{FunSpec, Matchers}
 
 /**

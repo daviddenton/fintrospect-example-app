@@ -1,5 +1,4 @@
-package example
-
+package example.diagnostic
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get

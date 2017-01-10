@@ -1,10 +1,11 @@
-package example
+package example.web
 
 import java.time.LocalDateTime
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
+import example.external.UserDirectory
 import io.fintrospect.RouteSpec
 import io.fintrospect.templating.View
 

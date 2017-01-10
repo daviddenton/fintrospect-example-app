@@ -3,8 +3,10 @@ package env
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
-import example.UserDirectory.Create
 import example._
+import example.api.Message
+import example.external.UserDirectory
+import example.external.UserDirectory.Create
 import io.circe.generic.auto._
 import io.fintrospect.ServerRoutes
 import io.fintrospect.formats.Circe.JsonFormat._

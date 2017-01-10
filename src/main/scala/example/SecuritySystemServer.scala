@@ -3,17 +3,18 @@ import java.time.Clock
 
 import com.twitter.finagle.{Http, ListeningServer}
 import com.twitter.util.Future
+import io.fintrospect.configuration.{Authority, Port}
 
 /**
   * Responsible for setting up real HTTP servers and clients to downstream services via HTTP
   */
-class SecuritySystemServer(serverPort: Int, userDirectoryPort: Int, entryLoggerPort: Int) {
+class SecuritySystemServer(serverPort: Port, userDirectoryAuthority: Authority, entryLoggerAuthority: Authority) {
 
   private var server: ListeningServer = _
 
   private val service = new SecuritySystem(
-    Http.newService(s"localhost:$userDirectoryPort"),
-    Http.newService(s"localhost:$entryLoggerPort"),
+    Http.newService(userDirectoryAuthority.toString()),
+    Http.newService(entryLoggerAuthority.toString()),
     Clock.systemUTC()).service
 
   def start(): Future[Unit] = {

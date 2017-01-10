@@ -1,8 +1,10 @@
-package example
+package example.api
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Post
 import com.twitter.finagle.http.{Request, Response, Status}
+import example.external.{EntryLogger, UserDirectory}
+import example.{Inhabitants, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.JsonFormat.encode

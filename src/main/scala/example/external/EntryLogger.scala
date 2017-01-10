@@ -1,4 +1,4 @@
-package example
+package example.external
 
 import java.time.Clock
 
@@ -7,7 +7,8 @@ import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status.{Created, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
-import example.EntryLogger.{Entry, Exit, LogList}
+import example.external.EntryLogger.{Entry, Exit, LogList}
+import example.{UserEntry, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.bodySpec
@@ -46,13 +47,13 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
   private val entryClient = Entry.route bindToClient client
 
   def enter(username: Username): Future[UserEntry] =
-    entryClient(Entry.entry --> UserEntry(username.value, goingIn = true, clock.instant().toEpochMilli))
+    entryClient(Entry.entry --> UserEntry.entering(username, clock))
       .flatMap(expectStatusAndExtract(Created, Entry.entry))
 
   private val exitClient = Exit.route bindToClient client
 
   def exit(username: Username): Future[UserEntry] =
-    exitClient(Exit.entry --> UserEntry(username.value, goingIn = false, clock.instant().toEpochMilli))
+    exitClient(Exit.entry --> UserEntry.exiting(username, clock))
       .flatMap(expectStatusAndExtract(Created, Exit.entry))
 
   private val listClient = LogList.route bindToClient client

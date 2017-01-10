@@ -1,4 +1,4 @@
-package example
+package example.diagnostic
 
 import java.io.PrintStream
 
@@ -14,9 +14,9 @@ class RequestCountingFilter(out: PrintStream) extends SimpleFilter[Request, Resp
 
   override def apply(request: Request, service: Service[Request, Response]): Future[Response] = {
     service(request)
-      .onSuccess(r => {
+      .onSuccess(_ => {
         successes += 1
-        if(successes % 10 == 0) {
+        if (successes % 10 == 0) {
           out.println(s"$successes successful requests served!")
         }
       })

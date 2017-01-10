@@ -2,8 +2,8 @@ package env
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response}
-import example.EntryLogger.{Entry, Exit, LogList}
 import example.UserEntry
+import example.external.EntryLogger.{Entry, Exit, LogList}
 import io.circe.generic.auto._
 import io.fintrospect.ServerRoutes
 import io.fintrospect.formats.Circe.JsonFormat.encode

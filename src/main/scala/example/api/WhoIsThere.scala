@@ -1,10 +1,11 @@
-package example
-
+package example.api
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.util.Future
+import example.external.UserDirectory
+import example.{EmailAddress, Id, Inhabitants, User, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.JsonFormat.encode

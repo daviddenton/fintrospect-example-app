@@ -4,7 +4,8 @@ import com.twitter.finagle.http.Response
 import com.twitter.finagle.http.Status.InternalServerError
 import com.twitter.util.Await
 import env.FakeUserDirectory
-import example.{EmailAddress, RemoteSystemProblem, Username}
+import example.external.RemoteSystemProblem
+import example.{EmailAddress, Username}
 import io.fintrospect.testing.OverridableHttpService
 import org.scalatest.BeforeAndAfterEach
 

@@ -1,5 +1,4 @@
-package example
-
+package example.external
 
 import java.lang.Integer.parseInt
 
@@ -8,7 +7,8 @@ import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
-import example.UserDirectory.{Create, Delete, Lookup, UserList}
+import example.external.UserDirectory.{Create, Delete, Lookup, UserList}
+import example.{EmailAddress, Id, User, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.bodySpec
@@ -81,10 +81,11 @@ class UserDirectory(client: Service[Request, Response]) {
   def lookup(username: Username): Future[Option[User]] =
     lookupClient(Lookup.username --> username)
       .flatMap {
-        r => r.status match {
-          case Ok => Future.value(Some(Body(bodySpec[User]()) <-- r))
-          case NotFound => Future.value(None)
-          case s => Future.exception(RemoteSystemProblem("user directory", r.status))
-        }
+        r =>
+          r.status match {
+            case Ok => Future.value(Some(Body(bodySpec[User]()) <-- r))
+            case NotFound => Future.value(None)
+            case s => Future.exception(RemoteSystemProblem("user directory", r.status))
+          }
       }
 }
