@@ -12,7 +12,7 @@ case class KnownUsers(users: Seq[User]) extends View
 
 object ShowKnownUsers {
   def route(userDirectory: UserDirectory): ServerRoute[Request, View] = {
-    val service = Service.mk[Request, View] { _ => userDirectory.list().flatMap(u => KnownUsers(u)) }
+    val service = Service.mk[Request, View] { _ => userDirectory.list().map(u => KnownUsers(u)) }
 
     RouteSpec("See all known users").at(Get) / "known" bindTo service
   }

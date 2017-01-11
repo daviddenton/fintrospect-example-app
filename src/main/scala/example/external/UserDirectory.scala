@@ -1,7 +1,5 @@
 package example.external
 
-import java.lang.Integer.parseInt
-
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
@@ -30,7 +28,7 @@ object UserDirectory {
   }
 
   object Delete {
-    val id = Path(ParameterSpec[Id]("id", None, NumberParamType, s => Id(parseInt(s)), _.value.toString))
+    val id = Path(ParameterSpec.int("id").map(Id, (i: Id) => i.value))
     val username = FormField.required.string("username")
     val route = RouteSpec().at(Post) / "user" / id
   }
@@ -40,7 +38,7 @@ object UserDirectory {
   }
 
   object Lookup {
-    val username = Path(ParameterSpec[Username]("username", None, StringParamType, s => Username(s), _.value.toString))
+    val username = Path(ParameterSpec.string("username").map(Username, (u: Username) => u.value.toString))
     val route = RouteSpec().at(Get) / "user" / username
   }
 

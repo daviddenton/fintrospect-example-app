@@ -12,7 +12,6 @@ import io.fintrospect.parameters.{ParameterSpec, Query}
 import io.fintrospect.{RouteSpec, ServerRoute}
 
 import scala.language.reflectiveCalls
-
 object KnockKnock {
   def route(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ServerRoute[Request, Response] = {
     val username = Query.required(ParameterSpec.string("username").map(s => Username(s), (u: Username) => u.value.toString))
@@ -25,7 +24,7 @@ object KnockKnock {
               if (inhabitants.add(user.name))
                 entryLogger
                   .enter(user.name)
-                  .map(ue => Accepted(encode(Message("Access granted"))))
+                  .map(_ => Accepted(encode(Message("Access granted"))))
               else BadRequest(encode(Message("User is already inside building")))
             case None => NotFound(encode(Message("Unknown user")))
           }

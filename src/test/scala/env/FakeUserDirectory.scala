@@ -2,7 +2,6 @@ package env
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response}
-import com.twitter.util.Future
 import example._
 import example.api.Message
 import example.external.UserDirectory
@@ -40,7 +39,7 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
       users
         .get(id)
         .map { user => users -= id; Ok(encode(user)).toFuture }
-        .getOrElse[Future[Response]](NotFound(encode(Message("no such user"))))
+        .getOrElse(NotFound(encode(Message("no such user"))))
   }
 
   add(UserDirectory.Delete.route.bindTo(delete))
