@@ -18,7 +18,7 @@ object Api {
     // use CORs settings that suit your particular use-case. This one allows any cross-domain traffic for the API routes
     val corsFilter = new HttpFilter(Cors.UnsafePermissivePolicy)
 
-    val apiKey = ApiKey(Header.required.string("key"), Service.mk { key: String => Future.value(key.equals("realSecret")) })
+    val apiKey = ApiKey(Header.required.string("key"), Service.mk { key: String => Future(key.equals("realSecret")) })
 
     RouteModule(Root / "security",
       Swagger2dot0Json(ApiInfo("Security System API", "1.0", "Known users are `Bob`, `Sue`, `Rita`. Security key is `realSecret`")),

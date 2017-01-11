@@ -66,7 +66,7 @@ class UserDirectory(client: Service[Request, Response]) {
   def delete(user: User): Future[Unit] =
     deleteClient(Delete.id --> user.id)
       .flatMap(
-        r => if (r.status == Ok) Future.value(Unit)
+        r => if (r.status == Ok) Future(Unit)
         else Future.exception(RemoteSystemProblem("user directory", r.status)))
 
   private val listClient = UserList.route bindToClient client
@@ -78,12 +78,11 @@ class UserDirectory(client: Service[Request, Response]) {
 
   def lookup(username: Username): Future[Option[User]] =
     lookupClient(Lookup.username --> username)
-      .flatMap {
-        r =>
-          r.status match {
-            case Ok => Future.value(Some(Body(bodySpec[User]()) <-- r))
-            case NotFound => Future.value(None)
-            case s => Future.exception(RemoteSystemProblem("user directory", r.status))
-          }
-      }
+      .flatMap(response =>
+        response.status match {
+          case Ok => Future.value(Some(Body(bodySpec[User]()) <-- response))
+          case NotFound => Future(None)
+          case _ => Future.exception(RemoteSystemProblem("user directory", response.status))
+        }
+      )
 }

@@ -40,7 +40,7 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
   private def expectStatusAndExtract[T](expectedStatus: Status, b: Body[T]): Response => Future[T] = {
     r =>
-      if (r.status == expectedStatus) Future.value(b <-- r)
+      if (r.status == expectedStatus) Future(b <-- r)
       else Future.exception(RemoteSystemProblem("entry logger", r.status))
   }
 
