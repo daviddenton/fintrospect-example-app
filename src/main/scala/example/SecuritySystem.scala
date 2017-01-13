@@ -3,11 +3,13 @@ package example
 import java.time.Clock
 
 import com.twitter.finagle.Service
+import com.twitter.finagle.http.path.Root
 import com.twitter.finagle.http.{Request, Response}
 import example.api.Api
-import example.diagnostic.Diagnostic
+import example.diagnostic.{Auditor, Diagnostic}
 import example.external.{EntryLogger, UserDirectory}
 import example.web.Web
+import io.fintrospect.Module
 import io.fintrospect.Module.combine
 
 /**
@@ -23,9 +25,11 @@ class SecuritySystem(userDirectoryHttp: Service[Request, Response],
   private val entryLogger = new EntryLogger(entryLoggerHttp, clock)
   private val inhabitants = new Inhabitants
 
-  val service: Service[Request, Response] = combine(
-    Api.module(inhabitants, userDirectory, entryLogger, events),
-    Diagnostic.module(clock),
-    Web.module(userDirectory)
-  ).toService
+  private val module: Module = combine(
+    Api.module(Root / "security", inhabitants, userDirectory, entryLogger),
+    Diagnostic.module(Root / "internal", clock),
+    Web.module(Root, userDirectory)
+  )
+
+  val service: Service[Request, Response] = Auditor(clock, events).andThen(module.toService)
 }

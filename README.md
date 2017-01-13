@@ -41,4 +41,4 @@ This example models a simple building security system accessible over HTTP. Requ
 5. Users are tracking in a binary state - inside or not (outside). Only people outside the building can enter, and vice versa.
 6. All HTTP endpoints are protected with a secret HTTP header to only allow authorised access.
 7. API documentation should be available.
-8. Logging of every 10 successful requests should be made.
+8. Logging of every successful requests should be made.
