@@ -1,4 +1,4 @@
-import java.time.Clock
+
 
 
 package object example {
@@ -15,11 +15,5 @@ package object example {
   case class User(id: Id, name: Username, email: EmailAddress)
 
   case class UserEntry(username: String, goingIn: Boolean, timestamp: Long)
-
-  object UserEntry {
-    def entering(username: Username, clock: Clock) = UserEntry(username.value, goingIn = true, clock.instant().toEpochMilli)
-
-    def exiting(username: Username, clock: Clock) = UserEntry(username.value, goingIn = false, clock.instant().toEpochMilli)
-  }
 }
 

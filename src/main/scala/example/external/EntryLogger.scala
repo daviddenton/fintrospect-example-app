@@ -30,7 +30,6 @@ object EntryLogger {
   object LogList {
     val route = RouteSpec().at(Get) / "list"
   }
-
 }
 
 /**
@@ -47,13 +46,13 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
   private val entryClient = Entry.route bindToClient client
 
   def enter(username: Username): Future[UserEntry] =
-    entryClient(Entry.entry --> UserEntry.entering(username, clock))
+    entryClient(Entry.entry --> UserEntry(username.value, goingIn = true, clock.instant().toEpochMilli))
       .flatMap(expectStatusAndExtract(Created, Entry.entry))
 
   private val exitClient = Exit.route bindToClient client
 
   def exit(username: Username): Future[UserEntry] =
-    exitClient(Exit.entry --> UserEntry.exiting(username, clock))
+    exitClient(Exit.entry --> UserEntry(username.value, goingIn = false, clock.instant().toEpochMilli))
       .flatMap(expectStatusAndExtract(Created, Exit.entry))
 
   private val listClient = LogList.route bindToClient client
