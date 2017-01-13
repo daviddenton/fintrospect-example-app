@@ -31,5 +31,5 @@ class SecuritySystem(userDirectoryHttp: Service[Request, Response],
     Web.module(Root, userDirectory)
   )
 
-  val service: Service[Request, Response] = Auditor(clock, events).andThen(module.toService)
+  val service: Service[Request, Response] = Auditor(clock, events).andThen(CatchAll()).andThen(module.toService)
 }
