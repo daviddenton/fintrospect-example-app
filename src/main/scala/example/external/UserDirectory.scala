@@ -3,7 +3,7 @@ package example.external
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
-import com.twitter.finagle.http.{Request, Response, Status}
+import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import example.external.UserDirectory.{Create, Delete, Lookup, UserList}
 import example.{EmailAddress, Id, User, Username}
@@ -29,8 +29,7 @@ object UserDirectory {
 
   object Delete {
     val id = Path(ParameterSpec.int("id").map(Id, (i: Id) => i.value))
-    val username = FormField.required.string("username")
-    val route = RouteSpec().at(Post) / "user" / id
+    val route = RouteSpec().at(Method.Delete) / "user" / id
   }
 
   object UserList {
@@ -63,8 +62,8 @@ class UserDirectory(client: Service[Request, Response]) {
 
   private val deleteClient = Delete.route bindToClient client
 
-  def delete(user: User): Future[Unit] =
-    deleteClient(Delete.id --> user.id)
+  def delete(id: Id): Future[Unit] =
+    deleteClient(Delete.id --> id)
       .flatMap(
         r => if (r.status == Ok) Future(Unit)
         else Future.exception(RemoteSystemProblem("user directory", r.status)))

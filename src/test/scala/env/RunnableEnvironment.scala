@@ -11,9 +11,9 @@ object RunnableEnvironment extends App {
   val entryLoggerPort = 10001
 
   val userDirectory = new FakeUserDirectory()
-  userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-  userDirectory.contains(User(Id(2), Username("Rita"), EmailAddress("rita@bob.com")))
-  userDirectory.contains(User(Id(3), Username("Sue"), EmailAddress("sue@bob.com")))
+  userDirectory.contains(User(Id(0), Username("Bob"), EmailAddress("bob@bob.com")))
+  userDirectory.contains(User(Id(1), Username("Rita"), EmailAddress("rita@bob.com")))
+  userDirectory.contains(User(Id(2), Username("Sue"), EmailAddress("sue@bob.com")))
 
   new TestHttpServer(userDirectoryPort, userDirectory).start()
   new TestHttpServer(entryLoggerPort, new FakeEntryLogger()).start()

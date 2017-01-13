@@ -6,6 +6,8 @@ resolvers += "JCenter" at "https://jcenter.bintray.com"
 
 mainClass in(Test, run) := Some("env.RunnableEnvironment")
 
+scalacOptions := Seq("-deprecation", "-feature")
+
 val fintrospectVersion = "14.1.0"
 
 libraryDependencies ++= Seq(

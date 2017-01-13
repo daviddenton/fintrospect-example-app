@@ -17,7 +17,7 @@ object Web {
       new RenderView(Html.ResponseBuilder, MustacheTemplates.CachingClasspath("templates"))
     )
       .withDescriptionPath(_ / "sitemap.xml")
-      .withRoute(ShowKnownUsers.route(userDirectory))
+      .withRoutes(ManageUsers.routes(userDirectory))
       .withRoute(ShowIndex.route(userDirectory))
 
     StaticModule(Root, Classpath("public")).combine(webModule)

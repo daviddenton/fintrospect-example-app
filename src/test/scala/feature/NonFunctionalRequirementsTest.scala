@@ -28,7 +28,7 @@ class NonFunctionalRequirementsTest extends FunSpec with Matchers with RunningTe
   it("serves static content") {
     val response = env.responseTo(Request("/style.css"))
     response.status shouldBe Ok
-    response.content shouldBe "body { font-family: \"Droid Sans\", sans-serif; } .content { padding: 50px; }"
+    response.content.contains("font-family: \"Droid Sans\"") shouldBe true
   }
 
   it("has a sitemap") {
@@ -36,7 +36,7 @@ class NonFunctionalRequirementsTest extends FunSpec with Matchers with RunningTe
     response.status shouldBe Ok
     response.contentType.startsWith(ContentTypes.APPLICATION_XML.value) shouldBe true
     val siteMap = trim(XML.loadString(response.content))
-    ((siteMap \\ "urlset" \\ "url") (0) \\ "loc").text shouldBe "http://my.security.system/known"
+    ((siteMap \\ "urlset" \\ "url") (0) \\ "loc").text shouldBe "http://my.security.system/users"
     ((siteMap \\ "urlset" \\ "url") (1) \\ "loc").text shouldBe "http://my.security.system"
   }
 

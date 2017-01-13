@@ -14,8 +14,8 @@ class WebTest extends FunSpec with Matchers with RunningTestEnvironment {
     response.contentType.startsWith(ContentTypes.TEXT_HTML.value) shouldBe true
   }
 
-  it("known users") {
-    val response = env.responseTo(Request("/"))
+  it("manage users") {
+    val response = env.responseTo(Request("/users"))
     response.status shouldBe Ok
     response.contentType.startsWith(ContentTypes.TEXT_HTML.value) shouldBe true
   }

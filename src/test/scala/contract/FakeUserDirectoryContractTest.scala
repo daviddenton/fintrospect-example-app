@@ -39,7 +39,7 @@ class FakeUserDirectoryContractTest extends UserDirectoryContract with BeforeAnd
     describe("delete user") {
       it("returns a RemoteException if the response status is not OK") {
         userServiceHttp.respondWith(InternalServerError)
-        intercept[RemoteSystemProblem](Await.result(userDirectory.delete(user))) shouldBe RemoteSystemProblem("user directory", InternalServerError)
+        intercept[RemoteSystemProblem](Await.result(userDirectory.delete(user.id))) shouldBe RemoteSystemProblem("user directory", InternalServerError)
       }
     }
     describe("lookup user") {

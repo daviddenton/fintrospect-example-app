@@ -49,7 +49,7 @@ trait UserDirectoryContract extends FunSpec with Matchers {
 
   it("can delete user") {
     Await.result(userDirectory.create(username, email))
-    Await.result(userDirectory.delete(user))
+    Await.result(userDirectory.delete(user.id))
     Await.result(userDirectory.lookup(username)) shouldBe None
     Await.result(userDirectory.list()) shouldBe Nil
   }
