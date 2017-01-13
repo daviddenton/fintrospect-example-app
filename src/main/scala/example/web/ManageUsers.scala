@@ -35,7 +35,7 @@ object ManageUsers {
         if (formInstance.isValid)
           userDirectory.create(username <-- formInstance, email <-- formInstance)
             .flatMap(_ => userDirectory.list())
-            .map(_ => View.Redirect("/users"))
+            .map(_ => View.Redirect("."))
         else userDirectory.list().map(u => ManageUsersView(u, formInstance))
       }
     }
@@ -51,7 +51,7 @@ object ManageUsers {
       request: Request => {
         userDirectory.delete(id <-- (form <-- request))
           .flatMap(_ => userDirectory.list())
-          .map(_ => View.Redirect("/users"))
+          .map(_ => View.Redirect("."))
       }
     }
     RouteSpec()
