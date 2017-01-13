@@ -19,8 +19,8 @@ case class ManageUsersView(users: Seq[User], form: Form) extends View {
 object ManageUsers {
 
   private def viewRoute(userDirectory: UserDirectory): ServerRoute[Request, View] = {
-    val route = Service.mk { _: Request => userDirectory.list().map(u => ManageUsersView(u, Form())) }
-    RouteSpec().at(Get) / "users" bindTo route
+    val service = Service.mk { _: Request => userDirectory.list().map(u => ManageUsersView(u, Form())) }
+    RouteSpec().at(Get) / "users" bindTo service
   }
 
   private def create(userDirectory: UserDirectory): ServerRoute[Request, View] = {
@@ -28,35 +28,35 @@ object ManageUsers {
     val email = FormField.required(ParameterSpec.string("email", validation = EmptyIsInvalid).map(EmailAddress, (u: EmailAddress) => u.value))
     val form = Body.webForm(username -> "Username is required!", email -> "Email is required!")
 
-    val route = Service.mk {
+    val service: Service[Request, View] = Service.mk {
       request: Request => {
         val formInstance = form <-- request
 
         if (formInstance.isValid)
           userDirectory.create(username <-- formInstance, email <-- formInstance)
             .flatMap(_ => userDirectory.list())
-            .map(u => ManageUsersView(u, Form()))
+            .map(_ => View.Redirect("/users"))
         else userDirectory.list().map(u => ManageUsersView(u, formInstance))
       }
     }
     RouteSpec()
       .body(form)
-      .at(Post) / "users" / "create" bindTo route
+      .at(Post) / "users" / "create" bindTo service
   }
 
   private def delete(userDirectory: UserDirectory): ServerRoute[Request, View] = {
     val id = FormField.required(ParameterSpec.int("id").map(Id, (u: Id) => u.value))
     val form = Body.form(id)
-    val route = Service.mk {
+    val service = Service.mk {
       request: Request => {
         userDirectory.delete(id <-- (form <-- request))
           .flatMap(_ => userDirectory.list())
-          .map(u => ManageUsersView(u, Form()))
+          .map(_ => View.Redirect("/users"))
       }
     }
     RouteSpec()
       .body(form)
-      .at(Post) / "users" / "delete" bindTo route
+      .at(Post) / "users" / "delete" bindTo service
   }
 
   def routes(userDirectory: UserDirectory): ServerRoutes[Request, View] =
