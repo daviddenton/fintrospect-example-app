@@ -30,6 +30,7 @@ object EntryLogger {
   object LogList {
     val route = RouteSpec().at(Get) / "list"
   }
+
 }
 
 /**
@@ -37,11 +38,10 @@ object EntryLogger {
   */
 class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, body: Body[T]): Response => Future[T] = {
+  private def expectStatusAndExtract[T](expectedStatus: Status, body: Body[T]): Response => Future[T] =
     request =>
       if (request.status == expectedStatus) Future(body <-- request)
       else Future.exception(RemoteSystemProblem("entry logger", request.status))
-  }
 
   private val entryClient = Entry.route bindToClient client
 
@@ -57,7 +57,5 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
   private val listClient = LogList.route bindToClient client
 
-  def list(): Future[Seq[UserEntry]] = {
-    listClient().flatMap(expectStatusAndExtract(Ok, Body(bodySpec[Seq[UserEntry]]())))
-  }
+  def list(): Future[Seq[UserEntry]] = listClient().flatMap(expectStatusAndExtract(Ok, Body(bodySpec[Seq[UserEntry]]())))
 }
