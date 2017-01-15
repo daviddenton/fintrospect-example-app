@@ -5,7 +5,6 @@ import com.twitter.finagle.http.Method.{Get, Post}
 import com.twitter.finagle.http.Request
 import example.external.UserDirectory
 import example.{EmailAddress, Id, User, Username}
-import io.fintrospect.parameters.StringValidations._
 import io.fintrospect.parameters.{Body, Form, FormField, ParameterSpec}
 import io.fintrospect.templating.View
 import io.fintrospect.{RouteSpec, ServerRoute, ServerRoutes}
@@ -24,8 +23,8 @@ object ManageUsers {
   }
 
   private def create(userDirectory: UserDirectory): ServerRoute[Request, View] = {
-    val username = FormField.required(ParameterSpec.string("username", validation = EmptyIsInvalid).map(Username, (u: Username) => u.value))
-    val email = FormField.required(ParameterSpec.string("email", validation = EmptyIsInvalid).map(EmailAddress, (u: EmailAddress) => u.value))
+    val username = FormField.required(ParameterSpec.string("username").map(Username, (u: Username) => u.value))
+    val email = FormField.required(ParameterSpec.string("email").map(EmailAddress, (u: EmailAddress) => u.value))
     val form = Body.webForm(username -> "Username is required!", email -> "Email is required!")
 
     val service: Service[Request, View] = Service.mk {
