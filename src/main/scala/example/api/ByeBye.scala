@@ -15,7 +15,7 @@ import scala.language.reflectiveCalls
 
 object ByeBye {
   def route(inhabitants: Inhabitants, entryLogger: EntryLogger): ServerRoute[Request, Response] = {
-    val username = Query.required(ParameterSpec.string("username").map(s => Username(s), (u: Username) => u.value.toString))
+    val username = Query.required(ParameterSpec.string().map(s => Username(s), (u: Username) => u.value.toString), "username")
 
     val userExit = Service.mk[Request, Response] {
       request => {

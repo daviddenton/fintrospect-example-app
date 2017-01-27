@@ -23,8 +23,8 @@ object ManageUsers {
   }
 
   private def create(userDirectory: UserDirectory): ServerRoute[Request, View] = {
-    val username = FormField.required(ParameterSpec.string("username").map(Username, (u: Username) => u.value))
-    val email = FormField.required(ParameterSpec.string("email").map(EmailAddress, (u: EmailAddress) => u.value))
+    val username = FormField.required(ParameterSpec.string().map(Username, (u: Username) => u.value), "username")
+    val email = FormField.required(ParameterSpec.string().map(EmailAddress, (u: EmailAddress) => u.value), "email")
     val form = Body.webForm(username -> "Username is required!", email -> "Email is required!")
 
     val service: Service[Request, View] = Service.mk {
@@ -44,7 +44,7 @@ object ManageUsers {
   }
 
   private def delete(userDirectory: UserDirectory): ServerRoute[Request, View] = {
-    val id = FormField.required(ParameterSpec.int("id").map(Id, (u: Id) => u.value))
+    val id = FormField.required(ParameterSpec.int().map(Id, (u: Id) => u.value), "id")
     val form = Body.form(id)
     val service = Service.mk {
       request: Request => {

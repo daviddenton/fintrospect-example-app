@@ -28,7 +28,7 @@ object UserDirectory {
   }
 
   object Delete {
-    val id = Path(ParameterSpec.int("id").map(Id, (i: Id) => i.value))
+    val id = Path(ParameterSpec.int().map(Id, (i: Id) => i.value), "id")
     val route = RouteSpec().at(Method.Delete) / "user" / id
   }
 
@@ -37,7 +37,7 @@ object UserDirectory {
   }
 
   object Lookup {
-    val username = Path(ParameterSpec.string("username").map(Username, (u: Username) => u.value.toString))
+    val username = Path(ParameterSpec.string().map(Username, (u: Username) => u.value.toString), "username")
     val route = RouteSpec().at(Get) / "user" / username
   }
 
