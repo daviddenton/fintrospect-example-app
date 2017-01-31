@@ -2,7 +2,7 @@ package example.external
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
-import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
+import com.twitter.finagle.http.Status.{Created, Ok}
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import example.external.UserDirectory.{Create, Delete, Lookup, UserList}
@@ -11,6 +11,7 @@ import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Circe.bodySpec
 import io.fintrospect.parameters._
+import io.fintrospect.util.{Extracted, ExtractionFailed}
 
 import scala.language.reflectiveCalls
 
@@ -48,7 +49,7 @@ object UserDirectory {
   */
 class UserDirectory(client: Service[Request, Response]) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, responseBody: UniBody[T]): Response => Future[T] =
+  private def expectStatusAndExtract[T](expectedStatus: Status, responseBody: Body[T]): Response => Future[T] =
     r => if (r.status == expectedStatus) Future.value(responseBody <-- r)
     else Future.exception(RemoteSystemProblem("user directory", r.status))
 
@@ -78,10 +79,9 @@ class UserDirectory(client: Service[Request, Response]) {
   def lookup(username: Username): Future[Option[User]] =
     lookupClient(Lookup.username --> username)
       .flatMap(response =>
-        response.status match {
-          case Ok => Future.value(Some(Body(bodySpec[User]()) <-- response))
-          case NotFound => Future(None)
-          case _ => Future.exception(RemoteSystemProblem("user directory", response.status))
+        Body(bodySpec[User]()) <--? response match {
+          case Extracted(r) => Future.value(r)
+          case ExtractionFailed(e) => Future.exception(RemoteSystemProblem("user directory", response.status))
         }
       )
 }
