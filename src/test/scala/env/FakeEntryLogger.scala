@@ -22,7 +22,7 @@ class FakeEntryLogger extends ServerRoutes[Request, Response] {
 
   add(Entry.route.bindTo(
     Service.mk[Request, Response] { request =>
-      val userEntry = Entry.entry <-- request
+      val userEntry = Entry.body <-- request
       entries += userEntry
       Created(encode(userEntry))
     })
@@ -31,7 +31,7 @@ class FakeEntryLogger extends ServerRoutes[Request, Response] {
   add(
     Exit.route.bindTo(
       Service.mk[Request, Response] { request =>
-        val userEntry = Exit.entry <-- request
+        val userEntry = Exit.body <-- request
         entries += userEntry
         Created(encode(userEntry))
       })

@@ -28,7 +28,7 @@ class FakeUserDirectory extends ServerRoutes[Request, Response] {
     request => {
       val form = UserDirectory.Create.form <-- request
       val (username, email) = form <-- (Create.username, Create.email)
-      val newUser = User(Id(users.size), Username(username), EmailAddress(email))
+      val newUser = User(Id(users.size), username, email)
       users(newUser.id) = newUser
       Created(encode(newUser))
     }
