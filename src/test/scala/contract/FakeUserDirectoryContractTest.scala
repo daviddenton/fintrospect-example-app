@@ -27,25 +27,25 @@ class FakeUserDirectoryContractTest extends UserDirectoryContract with BeforeAnd
     describe("list users") {
       it("returns a RemoteException if the response status is not OK") {
         userServiceHttp.respondWith(InternalServerError)
-        intercept[RemoteSystemProblem](Await.result(userDirectory.list())) shouldBe RemoteSystemProblem("user directory", InternalServerError)
+        intercept[RemoteSystemProblem](Await.result(userDirectory.list())) shouldBe RemoteSystemProblem("/user", InternalServerError)
       }
     }
     describe("create user") {
       it("returns a RemoteException if the response status is not Created") {
         userServiceHttp.respondWith(InternalServerError)
-        intercept[RemoteSystemProblem](Await.result(userDirectory.create(username, email))) shouldBe RemoteSystemProblem("user directory", InternalServerError)
+        intercept[RemoteSystemProblem](Await.result(userDirectory.create(username, email))) shouldBe RemoteSystemProblem("/user", InternalServerError)
       }
     }
     describe("delete user") {
       it("returns a RemoteException if the response status is not OK") {
         userServiceHttp.respondWith(InternalServerError)
-        intercept[RemoteSystemProblem](Await.result(userDirectory.delete(user.id))) shouldBe RemoteSystemProblem("user directory", InternalServerError)
+        intercept[RemoteSystemProblem](Await.result(userDirectory.delete(user.id))) shouldBe RemoteSystemProblem("/user/0", InternalServerError)
       }
     }
     describe("lookup user") {
       it("returns a RemoteException if the response status is not OK") {
         userServiceHttp.respondWith(InternalServerError)
-        intercept[RemoteSystemProblem](Await.result(userDirectory.lookup(username))) shouldBe RemoteSystemProblem("user directory", InternalServerError)
+        intercept[RemoteSystemProblem](Await.result(userDirectory.lookup(username))) shouldBe RemoteSystemProblem("/user/Bob%20the%20Builder", InternalServerError)
       }
     }
   }

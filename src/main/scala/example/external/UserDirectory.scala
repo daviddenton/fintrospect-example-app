@@ -2,13 +2,14 @@ package example.external
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.{Get, Post}
-import com.twitter.finagle.http.Status.{Created, Ok}
+import com.twitter.finagle.http.Status.{Created, NotFound, Ok}
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import example.external.UserDirectory.{Create, Delete, Lookup, UserList}
 import example.{EmailAddress, Id, User, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
+import io.fintrospect.filters.ResponseFilters.ExtractingResponse
 import io.fintrospect.formats.Circe.bodySpec
 import io.fintrospect.parameters._
 import io.fintrospect.util.{Extracted, ExtractionFailed}
@@ -52,39 +53,30 @@ object UserDirectory {
   */
 class UserDirectory(client: Service[Request, Response]) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, responseBody: Body[T]): Response => Future[T] =
-    r => if (r.status == expectedStatus) Future.value(responseBody <-- r)
-    else Future.exception(RemoteSystemProblem("user directory", r.status))
+  private val createClient = Create.route bindToClient ExtractingResponse(Create.response).andThen(OnlyAccept(Created)).andThen(client)
 
-  private val createClient = Create.route bindToClient client
+  def create(name: Username, inEmail: EmailAddress): Future[User] =
+    createClient(Create.form --> Form(Create.username --> name, Create.email --> inEmail)).flatMap {
+      case Extracted(Some(user)) => Future(user)
+      case _ => Future.exception(RemoteSystemProblem("create", Status.BadGateway))
+    }
 
-  def create(name: Username, inEmail: EmailAddress): Future[User] = {
-    val form = Form(Create.username --> name, Create.email --> inEmail)
-    createClient(Create.form --> form)
-      .flatMap(expectStatusAndExtract(Created, Create.response))
+  private val deleteClient = Delete.route bindToClient OnlyAccept(Ok).andThen(client)
+
+  def delete(id: Id): Future[Unit] = deleteClient(Delete.id --> id).map(_ => ())
+
+  private val listClient = UserList.route bindToClient ExtractingResponse(UserList.response).andThen(OnlyAccept(Ok)).andThen(client)
+
+  def list(): Future[Seq[User]] = listClient().flatMap {
+    case Extracted(users) => Future(users.map(_.toSeq).getOrElse(Seq.empty))
+    case ExtractionFailed(_) => Future.exception(RemoteSystemProblem("lookup", Status.BadGateway))
   }
 
-  private val deleteClient = Delete.route bindToClient client
-
-  def delete(id: Id): Future[Unit] =
-    deleteClient(Delete.id --> id)
-      .flatMap(
-        r => if (r.status == Ok) Future(Unit)
-        else Future.exception(RemoteSystemProblem("user directory", r.status)))
-
-  private val listClient = UserList.route bindToClient client
-
-  def list(): Future[Seq[User]] = listClient()
-    .flatMap(expectStatusAndExtract(Ok, UserList.response))
-
-  private val lookupClient = Lookup.route bindToClient client
+  private val lookupClient = Lookup.route bindToClient ExtractingResponse(Lookup.response).andThen(OnlyAccept(Ok, NotFound)).andThen(client)
 
   def lookup(username: Username): Future[Option[User]] =
-    lookupClient(Lookup.username --> username)
-      .flatMap(response =>
-        Lookup.response <--? response match {
-          case Extracted(r) => Future.value(r)
-          case ExtractionFailed(e) => Future.exception(RemoteSystemProblem("user directory", response.status))
-        }
-      )
+    lookupClient(Lookup.username --> username).flatMap {
+      case Extracted(r) => Future(r)
+      case ExtractionFailed(_) => Future.exception(RemoteSystemProblem("lookup", Status.BadGateway))
+    }
 }

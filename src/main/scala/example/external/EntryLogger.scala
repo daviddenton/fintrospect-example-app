@@ -11,8 +11,10 @@ import example.external.EntryLogger.{Entry, Exit, LogList}
 import example.{UserEntry, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
+import io.fintrospect.filters.ResponseFilters.ExtractingResponse
 import io.fintrospect.formats.Circe.bodySpec
 import io.fintrospect.parameters.Body
+import io.fintrospect.util.Extracted
 
 
 object EntryLogger {
@@ -28,8 +30,8 @@ object EntryLogger {
   }
 
   object LogList {
-    val route = RouteSpec().at(Get) / "list"
     val response = Body(bodySpec[Seq[UserEntry]]())
+    val route = RouteSpec().at(Get) / "list"
   }
 
 }
@@ -39,24 +41,29 @@ object EntryLogger {
   */
 class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
-  private def expectStatusAndExtract[T](expectedStatus: Status, body: Body[T]): Response => Future[T] =
-    request =>
-      if (request.status == expectedStatus) Future(body <-- request)
-      else Future.exception(RemoteSystemProblem("entry logger", request.status))
-
-  private val entryClient = Entry.route bindToClient client
+  private val entryClient = Entry.route bindToClient ExtractingResponse(Entry.body).andThen(OnlyAccept(Created)).andThen(client)
 
   def enter(username: Username): Future[UserEntry] =
     entryClient(Entry.body --> UserEntry(username.value, goingIn = true, clock.instant().toEpochMilli))
-      .flatMap(expectStatusAndExtract(Created, Entry.body))
+      .flatMap {
+        case Extracted(Some(userEntry)) => Future(userEntry)
+        case _ => Future.exception(RemoteSystemProblem("enter", Status.BadGateway))
+      }
 
-  private val exitClient = Exit.route bindToClient client
+  private val exitClient = Exit.route bindToClient ExtractingResponse(Exit.body).andThen(OnlyAccept(Created)).andThen(client)
 
   def exit(username: Username): Future[UserEntry] =
     exitClient(Exit.body --> UserEntry(username.value, goingIn = false, clock.instant().toEpochMilli))
-      .flatMap(expectStatusAndExtract(Created, Exit.body))
+      .flatMap {
+        case Extracted(Some(userEntry)) => Future(userEntry)
+        case _ => Future.exception(RemoteSystemProblem("exit", Status.BadGateway))
+      }
 
-  private val listClient = LogList.route bindToClient client
+  private val listClient = LogList.route bindToClient ExtractingResponse(LogList.response).andThen(OnlyAccept(Ok)).andThen(client)
 
-  def list(): Future[Seq[UserEntry]] = listClient().flatMap(expectStatusAndExtract(Ok, LogList.response))
+  def list(): Future[Seq[UserEntry]] =
+    listClient().flatMap {
+      case Extracted(Some(logs)) => Future(logs)
+      case _ => Future.exception(RemoteSystemProblem("logs", Status.BadGateway))
+    }
 }
