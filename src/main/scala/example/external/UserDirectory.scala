@@ -69,7 +69,7 @@ class UserDirectory(client: Service[Request, Response]) {
 
   def list(): Future[Seq[User]] = listClient().flatMap {
     case Extracted(users) => Future(users.map(_.toSeq).getOrElse(Seq.empty))
-    case ExtractionFailed(_) => Future.exception(RemoteSystemProblem("lookup", Status.BadGateway))
+    case ExtractionFailed(_) => Future.exception(RemoteSystemProblem("list", Status.BadGateway))
   }
 
   private val lookupClient = Lookup.route bindToClient ExtractingResponse(Lookup.response).andThen(OnlyAccept(Ok, NotFound)).andThen(client)
