@@ -1,6 +1,6 @@
 name := "fintrospect-example-app"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.11.8"
 
 resolvers += "JCenter" at "https://jcenter.bintray.com"
 
