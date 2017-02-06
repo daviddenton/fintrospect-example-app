@@ -11,7 +11,7 @@ import example.external.EntryLogger.{Entry, Exit, LogList}
 import example.{UserEntry, Username}
 import io.circe.generic.auto._
 import io.fintrospect.RouteSpec
-import io.fintrospect.filters.ResponseFilters.ExtractingResponse
+import io.fintrospect.filters.ResponseFilters.ExtractBody
 import io.fintrospect.formats.Circe.bodySpec
 import io.fintrospect.parameters.Body
 import io.fintrospect.util.Extracted
@@ -41,7 +41,7 @@ object EntryLogger {
   */
 class EntryLogger(client: Service[Request, Response], clock: Clock) {
 
-  private val entryClient = Entry.route bindToClient ExtractingResponse(Entry.body).andThen(OnlyAccept(Created)).andThen(client)
+  private val entryClient = Entry.route bindToClient ExtractBody(Entry.body).andThen(OnlyAccept(Created)).andThen(client)
 
   def enter(username: Username): Future[UserEntry] =
     entryClient(Entry.body --> UserEntry(username.value, goingIn = true, clock.instant().toEpochMilli))
@@ -50,7 +50,7 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
         case _ => Future.exception(RemoteSystemProblem("enter", Status.BadGateway))
       }
 
-  private val exitClient = Exit.route bindToClient ExtractingResponse(Exit.body).andThen(OnlyAccept(Created)).andThen(client)
+  private val exitClient = Exit.route bindToClient ExtractBody(Exit.body).andThen(OnlyAccept(Created)).andThen(client)
 
   def exit(username: Username): Future[UserEntry] =
     exitClient(Exit.body --> UserEntry(username.value, goingIn = false, clock.instant().toEpochMilli))
@@ -59,7 +59,7 @@ class EntryLogger(client: Service[Request, Response], clock: Clock) {
         case _ => Future.exception(RemoteSystemProblem("exit", Status.BadGateway))
       }
 
-  private val listClient = LogList.route bindToClient ExtractingResponse(LogList.response).andThen(OnlyAccept(Ok)).andThen(client)
+  private val listClient = LogList.route bindToClient ExtractBody(LogList.response).andThen(OnlyAccept(Ok)).andThen(client)
 
   def list(): Future[Seq[UserEntry]] =
     listClient().flatMap {
