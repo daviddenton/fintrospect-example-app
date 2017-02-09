@@ -11,8 +11,6 @@ import io.fintrospect.formats.Circe.ResponseBuilder._
 import io.fintrospect.parameters.{ParameterSpec, Query}
 import io.fintrospect.{RouteSpec, ServerRoute}
 
-import scala.language.reflectiveCalls
-
 object ByeBye {
   def route(inhabitants: Inhabitants, entryLogger: EntryLogger): ServerRoute[Request, Response] = {
     val username = Query.required(ParameterSpec.string().map(s => Username(s), (u: Username) => u.value.toString), "username")

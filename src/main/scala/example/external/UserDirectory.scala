@@ -14,8 +14,6 @@ import io.fintrospect.formats.Circe.bodySpec
 import io.fintrospect.parameters._
 import io.fintrospect.util.{Extracted, ExtractionFailed}
 
-import scala.language.reflectiveCalls
-
 /**
   * Remote User Directory service, accessible over HTTP. We define the Routes making up the HTTP contract here so they can be
   * re-used to provide the Fake implementation which we can dev against.

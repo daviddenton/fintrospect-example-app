@@ -11,8 +11,6 @@ import io.fintrospect.formats.Circe.JsonFormat.encode
 import io.fintrospect.formats.Circe.ResponseBuilder._
 import io.fintrospect.{RouteSpec, ServerRoute}
 
-import scala.language.reflectiveCalls
-
 object WhoIsThere {
   def route(inhabitants: Inhabitants, userDirectory: UserDirectory): ServerRoute[Request, Response] = {
     val listUsers = Service.mk[Request, Response] {

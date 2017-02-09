@@ -9,8 +9,6 @@ import io.fintrospect.parameters.{Body, Form, FormField, ParameterSpec}
 import io.fintrospect.templating.View
 import io.fintrospect.{RouteSpec, ServerRoute, ServerRoutes}
 
-import scala.language.reflectiveCalls
-
 case class ManageUsersView(users: Seq[User], form: Form) extends View {
   val errors: Seq[String] = form.errors.map(_.reason)
 }
