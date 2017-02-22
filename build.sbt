@@ -8,7 +8,7 @@ mainClass in(Test, run) := Some("env.RunnableEnvironment")
 
 scalacOptions := Seq("-deprecation", "-feature")
 
-val fintrospectVersion = "14.12.1"
+val fintrospectVersion = "14.13.0"
 
 libraryDependencies ++= Seq(
   "io.fintrospect" %% "fintrospect-core" % fintrospectVersion,

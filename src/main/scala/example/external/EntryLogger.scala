@@ -20,17 +20,17 @@ import io.fintrospect.util.Extracted
 object EntryLogger {
 
   object Entry {
-    val body = Body(bodySpec[UserEntry]())
+    val body = Body.of(bodySpec[UserEntry]())
     val route = RouteSpec().body(body).at(Post) / "entry"
   }
 
   object Exit {
-    val body = Body(bodySpec[UserEntry]())
+    val body = Body.of(bodySpec[UserEntry]())
     val route = RouteSpec().body(body).at(Post) / "exit"
   }
 
   object LogList {
-    val response = Body(bodySpec[Seq[UserEntry]]())
+    val response = Body.of(bodySpec[Seq[UserEntry]]())
     val route = RouteSpec().at(Get) / "list"
   }
 

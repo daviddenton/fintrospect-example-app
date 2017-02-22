@@ -25,23 +25,23 @@ object UserDirectory {
     val username = FormField.required(ParameterSpec.string().as[Username], "username")
     val form = Body.form(email, username)
     val route = RouteSpec().body(form).at(Post) / "user"
-    val response = Body(bodySpec[User]())
+    val response = Body.of(bodySpec[User]())
   }
 
   object Delete {
-    val id = Path(ParameterSpec.int().as[Id], "id")
+    val id = Path.of(ParameterSpec.int().as[Id], "id")
     val route = RouteSpec().at(Method.Delete) / "user" / id
   }
 
   object UserList {
     val route = RouteSpec().at(Get) / "user"
-    val response = Body(bodySpec[Seq[User]]())
+    val response = Body.of(bodySpec[Seq[User]]())
   }
 
   object Lookup {
-    val username = Path(ParameterSpec.string().as[Username], "username")
+    val username = Path.of(ParameterSpec.string().as[Username], "username")
     val route = RouteSpec().at(Get) / "user" / username
-    val response = Body(bodySpec[User]())
+    val response = Body.of(bodySpec[User]())
   }
 
 }
